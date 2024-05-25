@@ -12,19 +12,19 @@ sealed class BottomBarScreen(
     val icon: ImageVector
 ) {
 
-    object Profile: BottomBarScreen(
+    data object Profile: BottomBarScreen(
 //        route = Screen.WatchlistScreen.route,
         title = "Profile",
         icon = Icons.Filled.Person
     )
 
-    object Home: BottomBarScreen(
+    data object Home: BottomBarScreen(
 //        route = Screen.HomeScreen.route,
         title = "Home",
         icon = Icons.Filled.Forum
     )
 
-    object Group: BottomBarScreen(
+    data object Group: BottomBarScreen(
 //        route = Screen.WatchlistScreen.route,
         title = "Group",
         icon = Icons.Filled.Groups

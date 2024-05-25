@@ -1,8 +1,6 @@
 package com.example.aciflow.ui.screens
 
-import SimpleBottomAppBar
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -16,9 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.aciflow.R
+import com.example.aciflow.ui.components.SimpleBottomAppBar
 import com.example.aciflow.ui.components.TitleText
-import com.example.aciflow.ui.components.login.LoginForm
-import com.example.aciflow.ui.components.login.UiEvent
 import com.example.aciflow.ui.theme.AppTheme
 import com.example.aciflow.ui.viewmodels.LoginViewModel
 

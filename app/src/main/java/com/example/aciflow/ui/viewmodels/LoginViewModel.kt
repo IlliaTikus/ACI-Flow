@@ -14,9 +14,6 @@ import com.example.aciflow.ui.components.login.passwordMismatchErrorState
 import com.example.aciflow.ui.components.login.usernameEmptyErrorState
 import com.example.aciflow.ui.components.register.RegisterState
 
-/**
- * ViewModel for Login Screen
- */
 class LoginViewModel : ViewModel() {
 
     var loginState = mutableStateOf(LoginState())
@@ -178,7 +175,6 @@ class LoginViewModel : ViewModel() {
             is UiEvent.RegisterSubmit -> {
                 val inputsValidated = validateInputs()
                 if (inputsValidated) {
-                    // TODO Trigger login in authentication flow
                     loginState.value = loginState.value.copy(isLoginSuccessful = true)
                 }
             }
@@ -186,7 +182,6 @@ class LoginViewModel : ViewModel() {
             is UiEvent.ProfileSubmit -> {
                 val inputsValidated = validateInputs()
                 if (inputsValidated) {
-                    // TODO Trigger login in authentication flow
                     loginState.value = loginState.value.copy(isLoginSuccessful = true)
                 }
             }
