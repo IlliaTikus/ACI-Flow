@@ -17,7 +17,7 @@ import com.example.aciflow.ui.components.TitleText
 import com.example.aciflow.ui.components.login.UiEvent
 import com.example.aciflow.ui.components.register.RegisterForm
 import com.example.aciflow.ui.theme.AppTheme
-import com.example.aciflow.ui.viewmodels.LoginViewModel
+import com.example.aciflow.views.login.LoginViewModel
 
 @Composable
 fun RegisterScreen(loginViewModel: LoginViewModel = viewModel()) {

@@ -17,7 +17,7 @@ import com.example.aciflow.R
 import com.example.aciflow.ui.components.SimpleBottomAppBar
 import com.example.aciflow.ui.components.TitleText
 import com.example.aciflow.ui.theme.AppTheme
-import com.example.aciflow.ui.viewmodels.LoginViewModel
+import com.example.aciflow.views.login.LoginViewModel
 
 @Composable
 fun HomeScreen(loginViewModel: LoginViewModel = viewModel(), navController: NavController) {

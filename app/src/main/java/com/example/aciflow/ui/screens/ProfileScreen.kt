@@ -19,15 +19,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.aciflow.ui.components.PasswordField
+import com.example.aciflow.widgets.PasswordField
 import com.example.aciflow.ui.components.SimpleBottomAppBar
 import com.example.aciflow.ui.components.SimpleTopAppBar
 import com.example.aciflow.ui.components.SmallTitleText
 import com.example.aciflow.ui.components.TitleText
-import com.example.aciflow.ui.components.UsernameField
+import com.example.aciflow.widgets.UsernameField
 import com.example.aciflow.ui.components.login.UiEvent
 import com.example.aciflow.ui.theme.AppTheme
-import com.example.aciflow.ui.viewmodels.LoginViewModel
+import com.example.aciflow.views.login.LoginViewModel
 
 @Composable
 fun ProfileScreen(loginViewModel: LoginViewModel = viewModel(), navController: NavController) {

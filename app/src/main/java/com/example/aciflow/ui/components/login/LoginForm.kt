@@ -15,8 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
-import com.example.aciflow.ui.components.EmailField
-import com.example.aciflow.ui.components.PasswordField
+import com.example.aciflow.widgets.EmailField
+import com.example.aciflow.widgets.PasswordField
 import com.example.aciflow.ui.theme.AppTheme
 
 @Composable

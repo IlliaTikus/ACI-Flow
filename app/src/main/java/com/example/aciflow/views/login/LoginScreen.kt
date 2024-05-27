@@ -1,5 +1,6 @@
-package com.example.aciflow.ui.screens
+package com.example.aciflow.views.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,10 +19,15 @@ import com.example.aciflow.ui.theme.AppTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aciflow.R
 import com.example.aciflow.ui.components.login.UiEvent
-import com.example.aciflow.ui.viewmodels.LoginViewModel
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
+fun LoginScreen() {
+    val viewModel: LoginViewModel = viewModel()
+    LoginScreenContent(viewModel = viewModel)
+}
+
+@Composable
+fun LoginScreenContent(viewModel: LoginViewModel) {
     Scaffold(modifier = Modifier
         .fillMaxSize()
         .height(100.dp),
@@ -46,27 +52,19 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
             )
 
             val loginState by remember {
-                loginViewModel.loginState
+                viewModel.loginState
             }
 
             LoginForm(
                 loginState = loginState,
                 onEmailOrMobileChange = { inputString ->
-                    loginViewModel.onUiEvent(
-                        uiEvent = UiEvent.LoginEmailChanged(
-                            inputString
-                        )
-                    )
+                    Log.d("DEBUG", inputString)
                 },
                 onPasswordChange = { inputString ->
-                    loginViewModel.onUiEvent(
-                        uiEvent = UiEvent.LoginPasswordChanged(
-                            inputString
-                        )
-                    )
+                    Log.d("DEBUG", inputString)
                 },
                 onSubmit = {
-                    loginViewModel.onUiEvent(uiEvent = UiEvent.LoginSubmit)
+                    viewModel.onUiEvent(uiEvent = UiEvent.LoginSubmit)
                 })
         }
     }
