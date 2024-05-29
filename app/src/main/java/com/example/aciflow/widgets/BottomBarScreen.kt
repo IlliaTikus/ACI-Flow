@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.components
+package com.example.aciflow.widgets
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Forum

@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.theme
+package com.example.aciflow.theme
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp

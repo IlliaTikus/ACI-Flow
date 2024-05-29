@@ -12,8 +12,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.aciflow.nav.Screens
-import com.example.aciflow.ui.theme.ACIFlowTheme
+import com.example.aciflow.nav.Screen
+import com.example.aciflow.widgets.SimpleBottomAppBar
+import com.example.aciflow.theme.ACIFlowTheme
+import com.example.aciflow.views.homescreen.HomeScreen
 import com.example.aciflow.views.login.LoginScreen
 
 @Composable
@@ -43,17 +45,21 @@ fun rememberAppState(
 fun Navigation(modifier: Modifier, appState: AppState) {
     NavHost(navController = appState.navController,
             modifier = modifier,
-        startDestination = Screens.LoginScreen.route) {
+        startDestination = Screen.LoginScreen.route) {
 
-        composable(route = Screens.LoginScreen.route) {
-            LoginScreen()
+        composable(route = Screen.LoginScreen.route) {
+            LoginScreen {
+                route, popUp -> appState.navigateAndPopUp(route, popUp)
+            }
         }
 
-        composable(route = Screens.RegisterScreen.route){
-            //HomeScreen(navController = navController)
+        composable(route = Screen.HomeScreen.route){
+            HomeScreen {
+                SimpleBottomAppBar(appState = appState)
+            }
         }
 
-        composable(route = Screens.HomeScreen.route){
+        composable(route = Screen.RegisterScreen.route){
             //HomeScreen(navController = navController)
         }
     }

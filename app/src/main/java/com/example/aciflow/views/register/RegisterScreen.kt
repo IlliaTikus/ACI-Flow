@@ -1,4 +1,5 @@
-package com.example.aciflow.ui.screens
+package com.example.aciflow.views.register
+/*
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,11 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.aciflow.ui.components.SimpleTopAppBar
-import com.example.aciflow.ui.components.TitleText
+import com.example.aciflow.widgets.SimpleTopAppBar
+import com.example.aciflow.widgets.TitleText
 import com.example.aciflow.ui.components.login.UiEvent
-import com.example.aciflow.ui.components.register.RegisterForm
-import com.example.aciflow.ui.theme.AppTheme
+import com.example.aciflow.views.register.components.RegisterForm
+import com.example.aciflow.theme.AppTheme
 import com.example.aciflow.views.login.LoginViewModel
 
 @Composable
@@ -81,4 +82,4 @@ fun RegisterScreen(loginViewModel: LoginViewModel = viewModel()) {
             )
         }
     }
-}
+}*/

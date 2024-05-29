@@ -56,10 +56,11 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
 
     // firebase dependencies
-    implementation("com.google.firebase:firebase-auth")
+    implementation(libs.firebase.auth)
 
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    //implementation(libs.firebase.auth.ktx)
     val lifecycle_version = "2.7.0"
     implementation ("androidx.compose.material:material-icons-extended:1.4.3")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")

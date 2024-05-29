@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.components.login
+package com.example.aciflow.views.login.components
 
 data class LoginState(
     val email: String = "",

@@ -1,6 +1,6 @@
-package com.example.aciflow.ui.components.register
+package com.example.aciflow.views.register.components
 
-import com.example.aciflow.ui.components.login.ErrorState
+import com.example.aciflow.views.login.components.ErrorState
 
 data class RegisterState(
     val email: String = "",

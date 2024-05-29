@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.components.login
+package com.example.aciflow.views.login.components
 
 sealed class UiEvent {
     data class LoginEmailChanged(val inputValue: String) : UiEvent()

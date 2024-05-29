@@ -1,4 +1,5 @@
-package com.example.aciflow.ui.screens
+package com.example.aciflow.views.profile
+/*
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -136,3 +137,4 @@ fun ProfileScreen(loginViewModel: LoginViewModel = viewModel(), navController: N
         }
     }
 }
+*/

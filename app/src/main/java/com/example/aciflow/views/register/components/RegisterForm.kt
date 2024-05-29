@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.components.register
+package com.example.aciflow.views.register.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.ImeAction
 import com.example.aciflow.widgets.EmailField
 import com.example.aciflow.widgets.PasswordField
 import com.example.aciflow.widgets.UsernameField
-import com.example.aciflow.ui.theme.AppTheme
+import com.example.aciflow.theme.AppTheme
 
 @Composable
 fun RegisterForm(

@@ -1,6 +1,6 @@
-package com.example.aciflow.ui.components
+package com.example.aciflow.widgets
 
-import com.example.aciflow.ui.components.login.ErrorState
+import com.example.aciflow.views.login.components.ErrorState
 
 data class ProfileState(
     val username: String = "",

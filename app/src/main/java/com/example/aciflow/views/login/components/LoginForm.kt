@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.components.login
+package com.example.aciflow.views.login.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import com.example.aciflow.widgets.EmailField
 import com.example.aciflow.widgets.PasswordField
-import com.example.aciflow.ui.theme.AppTheme
+import com.example.aciflow.theme.AppTheme
+import com.example.aciflow.views.login.LoginUIState
 
 @Composable
 fun LoginForm(
-    loginState: LoginState,
+    loginState: LoginUIState,
     onEmailOrMobileChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSubmit: () -> Unit
@@ -38,9 +39,7 @@ fun LoginForm(
                 .padding(top = AppTheme.dimens.paddingLarge),
             value = loginState.email,
             onValueChange = onEmailOrMobileChange,
-            label = "Email",
-            isError = loginState.errorState.emailErrorState.hasError,
-            errorText = loginState.errorState.emailErrorState.errorMessage
+            label = "Email"
         )
 
         // Password
@@ -51,8 +50,6 @@ fun LoginForm(
             value = loginState.password,
             onValueChange = onPasswordChange,
             label = "Password",
-            isError = loginState.errorState.passwordErrorState.hasError,
-            errorText = loginState.errorState.passwordErrorState.errorMessage,
             imeAction = ImeAction.Done
         )
 

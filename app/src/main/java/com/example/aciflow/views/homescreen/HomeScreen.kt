@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.screens
+package com.example.aciflow.views.homescreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -11,16 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.aciflow.R
-import com.example.aciflow.ui.components.SimpleBottomAppBar
-import com.example.aciflow.ui.components.TitleText
-import com.example.aciflow.ui.theme.AppTheme
-import com.example.aciflow.views.login.LoginViewModel
+import com.example.aciflow.widgets.TitleText
+import com.example.aciflow.theme.AppTheme
 
 @Composable
-fun HomeScreen(loginViewModel: LoginViewModel = viewModel(), navController: NavController) {
+fun HomeScreen(navBar: @Composable () -> Unit) {
+    // TODO: home screen viewmodel and uistate etc.
+    HomeScreenContent(navBar)
+}
+
+@Composable
+fun HomeScreenContent(navBar: @Composable () -> Unit) {
     Scaffold(modifier = Modifier
         .fillMaxSize()
         .height(100.dp),
@@ -31,11 +33,7 @@ fun HomeScreen(loginViewModel: LoginViewModel = viewModel(), navController: NavC
                 modifier = Modifier
             )
         },
-        bottomBar = {
-            SimpleBottomAppBar(
-                navController = navController
-            )
-        }
+        bottomBar = navBar
     ) { innerPadding ->
         Column(
             modifier = Modifier

@@ -1,6 +1,5 @@
 package com.example.aciflow.views.login
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,21 +12,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.aciflow.ui.components.login.LoginForm
-import com.example.aciflow.ui.components.TitleText
-import com.example.aciflow.ui.theme.AppTheme
+import com.example.aciflow.views.login.components.LoginForm
+import com.example.aciflow.widgets.TitleText
+import com.example.aciflow.theme.AppTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aciflow.R
-import com.example.aciflow.ui.components.login.UiEvent
+import com.example.aciflow.model.services.AccountService
+import com.example.aciflow.nav.Screen
 
 @Composable
-fun LoginScreen() {
-    val viewModel: LoginViewModel = viewModel()
-    LoginScreenContent(viewModel = viewModel)
+fun LoginScreen(openAndPop: (Screen, Screen) -> Unit) {
+    val factory = LoginViewModelFactory(accountService = AccountService.getAccountService())
+    val viewModel: LoginViewModel = viewModel(factory = factory)
+    viewModel.checkUserSignedIn(openAndPop)
+    LoginScreenContent(viewModel = viewModel, openAndPop=openAndPop)
 }
 
 @Composable
-fun LoginScreenContent(viewModel: LoginViewModel) {
+fun LoginScreenContent(viewModel: LoginViewModel, openAndPop: (Screen, Screen) -> Unit) {
     Scaffold(modifier = Modifier
         .fillMaxSize()
         .height(100.dp),
@@ -51,20 +53,20 @@ fun LoginScreenContent(viewModel: LoginViewModel) {
                 "Login to ACI Flow"
             )
 
-            val loginState by remember {
-                viewModel.loginState
+            val uiState by remember {
+                viewModel.uiState
             }
 
             LoginForm(
-                loginState = loginState,
+                loginState = uiState,
                 onEmailOrMobileChange = { inputString ->
-                    Log.d("DEBUG", inputString)
+                    viewModel.onEmailChange(inputString)
                 },
                 onPasswordChange = { inputString ->
-                    Log.d("DEBUG", inputString)
+                    viewModel.onPasswordChange(inputString)
                 },
                 onSubmit = {
-                    viewModel.onUiEvent(uiEvent = UiEvent.LoginSubmit)
+                    viewModel.onSubmit(openAndPop)
                 })
         }
     }

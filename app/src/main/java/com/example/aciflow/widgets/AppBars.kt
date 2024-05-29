@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.components
+package com.example.aciflow.widgets
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,9 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.aciflow.AppState
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleTopAppBar(
@@ -30,14 +31,14 @@ fun SimpleTopAppBar(
 }
 
 @Composable
-fun SimpleBottomAppBar(navController: NavController){
+fun SimpleBottomAppBar(appState: AppState){
     val screens = listOf(
         BottomBarScreen.Profile,
         BottomBarScreen.Home,
         BottomBarScreen.Group
     )
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     NavigationBar {
@@ -46,7 +47,7 @@ fun SimpleBottomAppBar(navController: NavController){
                 selected = currentDestination?.hierarchy?.any {
                     it.route == null
                 } == true,
-//                onClick = { navController.navigate(screen.route) },
+//                onClick = { appState.navigate(screen.route) },
                 onClick = { },
                 icon = { Icon(
                     imageVector = screen.icon,
