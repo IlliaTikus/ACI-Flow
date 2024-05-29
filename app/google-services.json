@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "969177146979",
+    "project_id": "aci-flow",
+    "storage_bucket": "aci-flow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969177146979:android:ccb303e1d960e5fb2a7a56",
+        "android_client_info": {
+          "package_name": "com.example.aciflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4ssK3hbCeukSWqX7mkWBNq8KuBlJxBaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
