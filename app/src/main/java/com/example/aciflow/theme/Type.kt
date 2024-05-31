@@ -1,4 +1,4 @@
-package com.example.aciflow.ui.theme
+package com.example.aciflow.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

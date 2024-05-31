@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -50,6 +52,12 @@ android {
 }
 
 dependencies {
+    // firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+
+    // firebase dependencies
+    implementation(libs.firebase.auth)
+
     val nav_version = "2.7.7"
 
     // Kotlin
@@ -61,6 +69,11 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation(libs.androidx.navigation.compose)
+    //implementation(libs.firebase.auth.ktx)
+    val lifecycle_version = "2.7.0"
+    implementation ("androidx.compose.material:material-icons-extended:1.4.3")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
