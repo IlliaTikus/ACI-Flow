@@ -11,29 +11,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.aciflow.R
 import com.example.aciflow.widgets.TitleText
 import com.example.aciflow.theme.AppTheme
 
 @Composable
-fun HomeScreen(navBar: @Composable () -> Unit) {
-    // TODO: home screen viewmodel and uistate etc.
-    HomeScreenContent(navBar)
+fun HomeScreen(navController: NavController) {
+    HomeScreenContent()
 }
 
 @Composable
-fun HomeScreenContent(navBar: @Composable () -> Unit) {
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .height(100.dp),
+fun HomeScreenContent() {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .height(100.dp),
         topBar = {
             Image(
                 painter = painterResource(id = R.drawable.banner2),
                 contentDescription = "ACI Flow Logo",
                 modifier = Modifier
             )
-        },
-        bottomBar = navBar
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -41,7 +41,6 @@ fun HomeScreenContent(navBar: @Composable () -> Unit) {
                 .padding(horizontal = AppTheme.dimens.paddingLarge)
                 .padding(bottom = AppTheme.dimens.paddingExtraLarge),
         ) {
-
             TitleText(
                 modifier = Modifier
                     .padding(top = AppTheme.dimens.paddingLarge)

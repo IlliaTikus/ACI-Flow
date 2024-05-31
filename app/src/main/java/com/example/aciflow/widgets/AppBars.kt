@@ -1,5 +1,10 @@
 package com.example.aciflow.widgets
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -10,9 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.aciflow.AppState
+import com.example.aciflow.nav.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,30 +38,35 @@ fun SimpleTopAppBar(
 }
 
 @Composable
-fun SimpleBottomAppBar(appState: AppState){
-    val screens = listOf(
-        BottomBarScreen.Profile,
-        BottomBarScreen.Home,
-        BottomBarScreen.Group
-    )
+fun SimpleBottomAppBar(appState: AppState) {
+    NavigationBar(
+    ) {
+        val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
 
-    val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    NavigationBar {
-        screens.forEach { screen ->
-            NavigationBarItem(label = { Text(screen.title) },
-                selected = currentDestination?.hierarchy?.any {
-                    it.route == null
-                } == true,
-//                onClick = { appState.navigate(screen.route) },
-                onClick = { },
-                icon = { Icon(
-                    imageVector = screen.icon,
-                    contentDescription = screen.title
-                )
-                }
-            )
-        }
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            label = { Text("Home") },
+            selected = currentRoute == Screen.HomeScreen.route,
+            onClick = { appState.navController.navigate(Screen.HomeScreen.route) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+            label = { Text("Profile") },
+            selected = currentRoute == Screen.Profile.route,
+            onClick = { appState.navController.navigate(Screen.Profile.route) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Group, contentDescription = "Group") },
+            label = { Text("Group") },
+            selected = currentRoute == Screen.Group.route,
+            onClick = { appState.navController.navigate(Screen.Group.route) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Event, contentDescription = "Deadlines") },
+            label = { Text("Deadlines") },
+            selected = currentRoute == Screen.Deadlines.route,
+            onClick = { appState.navController.navigate(Screen.Deadlines.route) }
+        )
     }
 }
