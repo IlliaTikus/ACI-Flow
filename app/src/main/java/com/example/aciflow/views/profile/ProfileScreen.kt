@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.AppState
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.nav.Screen
 import com.example.aciflow.theme.AppTheme
@@ -32,13 +33,17 @@ import com.example.aciflow.widgets.UsernameField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController, appState: AppState) {
 //    val profileState by profileViewModel.profileState.collectAsState()
-    val factory = ProfileViewModelFactory(accountService = AccountService.getAccountService())
+    val factory = ProfileViewModelFactory(accountService = AccountService.getAccountService(), appState = appState)
     val viewModel: ProfileViewModel = viewModel(factory = factory)
 
     fun onUsernameChanged(inputString: String) {
         viewModel.onUsernameChanged(inputString)
+    }
+
+    fun onLogout () {
+        viewModel.onLogout()
     }
 
     Scaffold(
@@ -63,7 +68,7 @@ fun ProfileScreen(navController: NavController) {
             }
 
             SmallTitleText(
-                text = "michaelcampus@gmail.com"
+                text = AccountService.getAccountService().currentUserEmail,
             )
 
             SmallTitleTextWhite(
@@ -129,7 +134,7 @@ fun ProfileScreen(navController: NavController) {
                     .height(AppTheme.dimens.normalButtonHeight)
                     .requiredWidth(AppTheme.dimens.normalButtonWidth)
                     .align(Alignment.CenterHorizontally),
-                onClick = { },
+                onClick = { onLogout() },
             ) {
                 Text(text = "Logout", style = MaterialTheme.typography.titleMedium)
             }

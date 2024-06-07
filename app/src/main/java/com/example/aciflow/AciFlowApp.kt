@@ -36,17 +36,22 @@ fun AciFlowApp() {
         Surface(color = MaterialTheme.colorScheme.background) {
             val appState = rememberAppState()
 
+            val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    TopAppBar(title = { Text("ACI Flow") })
+                    if (currentRoute != Screen.LoginScreen.route) {
+                        TopAppBar(title = { Text("ACI Flow") })
+                    }
                 },
                 bottomBar = {
-                    SimpleBottomAppBar(appState = appState)
+                    if (currentRoute != Screen.LoginScreen.route) {
+                        SimpleBottomAppBar(appState = appState)
+                    }
                 },
                 floatingActionButton = {
-                    val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
-                    val currentRoute = navBackStackEntry?.destination?.route
                     if (currentRoute == Screen.Deadlines.route) {
                         FloatingActionButton(onClick = { appState.navController.navigate(Screen.EditDeadline.route) }) {
                             Icon(Icons.Default.Add, contentDescription = "Add Deadline")
@@ -68,7 +73,7 @@ fun AciFlowApp() {
                         HomeScreen(appState.navController)
                     }
                     composable(Screen.Profile.route) {
-                        ProfileScreen(appState.navController)
+                        ProfileScreen(appState.navController, appState)
                     }
                     composable(Screen.Forum.route) {
                         ForumScreen(appState.navController)
