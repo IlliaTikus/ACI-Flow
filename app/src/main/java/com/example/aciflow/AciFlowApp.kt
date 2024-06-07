@@ -2,8 +2,6 @@ package com.example.aciflow
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,9 +18,8 @@ import com.example.aciflow.nav.Screen
 import com.example.aciflow.theme.ACIFlowTheme
 import com.example.aciflow.views.deadline.edit.EditDeadlineScreen
 import com.example.aciflow.views.deadlines.DeadlinesScreen
-import com.example.aciflow.views.forum.ForumScreen
+import com.example.aciflow.views.forum.HomeScreen
 import com.example.aciflow.views.group.GroupScreen
-import com.example.aciflow.views.homescreen.HomeScreen
 import com.example.aciflow.views.login.LoginScreen
 import com.example.aciflow.views.profile.ProfileScreen
 import com.example.aciflow.views.deadline_detail.DeadlineDetailScreen
@@ -52,13 +49,18 @@ fun AciFlowApp() {
                         SimpleBottomAppBar(appState = appState)
                     }
                 },
-                floatingActionButton = {
-                    if (currentRoute == Screen.Deadlines.route) {
-                        FloatingActionButton(onClick = { appState.navController.navigate(Screen.EditDeadline.route) }) {
-                            Icon(Icons.Default.Add, contentDescription = "Add Deadline")
-                        }
-                    }
-                }
+//                floatingActionButton = {
+//                    if (currentRoute == Screen.Deadlines.route) {
+//                        FloatingActionButton(onClick = { appState.navController.navigate(Screen.EditDeadline.route) }) {
+//                            Icon(Icons.Default.Add, contentDescription = "Add Deadline")
+//                        }
+//                    }
+//                    if (currentRoute == Screen.ForumScreen.route) {
+//                        FloatingActionButton(onClick = { appState.navController.navigate(Screen.Post.route) }) {
+//                            Icon(Icons.Default.Add, contentDescription = "Add Post")
+//                        }
+//                    }
+//                }
             ) { innerPadding ->
                 NavHost(
                     navController = appState.navController,
@@ -75,14 +77,11 @@ fun AciFlowApp() {
                             appState.navigateAndPopUp(route, popUp)
                         }
                     }
-                    composable(Screen.HomeScreen.route) {
-                        HomeScreen(appState.navController)
-                    }
                     composable(Screen.Profile.route) {
                         ProfileScreen(appState.navController, appState)
                     }
-                    composable(Screen.Forum.route) {
-                        ForumScreen(appState.navController)
+                    composable(Screen.ForumScreen.route) {
+                        HomeScreen(appState.navController)
                     }
                     composable(Screen.Deadlines.route) {
                         DeadlinesScreen(appState.navController)

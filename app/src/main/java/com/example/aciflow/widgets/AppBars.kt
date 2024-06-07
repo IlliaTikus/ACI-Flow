@@ -2,6 +2,7 @@ package com.example.aciflow.widgets
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -45,10 +46,10 @@ fun SimpleBottomAppBar(appState: AppState) {
         val currentRoute = navBackStackEntry?.destination?.route
 
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            icon = { Icon(Icons.Default.Forum, contentDescription = "Home") },
             label = { Text("Home") },
-            selected = currentRoute == Screen.HomeScreen.route,
-            onClick = { appState.navController.navigate(Screen.HomeScreen.route) }
+            selected = currentRoute == Screen.ForumScreen.route,
+            onClick = { appState.navController.navigate(Screen.ForumScreen.route) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },

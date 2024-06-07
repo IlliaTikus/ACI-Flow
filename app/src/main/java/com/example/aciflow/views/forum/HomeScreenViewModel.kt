@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 data class Post(val user: String, val content: String)
 
-class ForumViewModel : ViewModel() {
+class HomeScreenViewModel : ViewModel() {
     private val _posts = MutableStateFlow(listOf(
         Post("Alice", "Hello, this is a forum post."),
         Post("Bob", "Welcome to the forum!")

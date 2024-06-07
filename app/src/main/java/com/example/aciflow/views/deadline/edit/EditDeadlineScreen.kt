@@ -1,9 +1,12 @@
 package com.example.aciflow.views.deadline.edit
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,9 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.R
+import com.example.aciflow.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +38,23 @@ fun EditDeadlineScreen(
     val description by editDeadlineViewModel.description.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Edit Deadline") }) },
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    Image(
+                        painter = painterResource(id = R.drawable.back),
+                        contentDescription = "Back",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(AppTheme.dimens.paddingNormal)
+                            .clickable {
+                                navController.popBackStack()
+                            }
+                    )
+                },
+                title = { Text("Edit Deadline") }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 editDeadlineViewModel.saveDeadline()

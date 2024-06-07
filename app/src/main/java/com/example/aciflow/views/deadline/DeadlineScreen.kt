@@ -34,6 +34,11 @@ fun DeadlinesScreen(
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Deadlines") }) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { navController.navigate(Screen.EditDeadline.route) }) {
+                Icon(Icons.Default.Add, contentDescription = "Add Deadline")
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier

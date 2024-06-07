@@ -33,7 +33,7 @@ class LoginViewModel(
 
     fun checkUserSignedIn(openAndPop: (Screen, Screen) -> Unit) {
         if (accountService.hasUser)
-            openAndPop(Screen.HomeScreen, Screen.LoginScreen)
+            openAndPop(Screen.ForumScreen, Screen.LoginScreen)
     }
 
     fun onSubmit(openAndPop: (Screen, Screen) -> Unit) {
@@ -48,7 +48,7 @@ class LoginViewModel(
             hasError = true
         }
 
-        if (!password.isValidPassword()) {
+        if (password.isBlank()) {
             uiState.value = uiState.value.copy(
                 errorState = uiState.value.errorState.copy(
                     passwordErrorState = ErrorState(
@@ -68,7 +68,7 @@ class LoginViewModel(
             accountService.signIn(email, password)
             Log.i("VM", "Signed in successfully :)")
             Log.i("VM", "Userid: ${accountService.currentUserId}")
-            openAndPop(Screen.HomeScreen, Screen.LoginScreen)
+            openAndPop(Screen.ForumScreen, Screen.LoginScreen)
         }
     }
 

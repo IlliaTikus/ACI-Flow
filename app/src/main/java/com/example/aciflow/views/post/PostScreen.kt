@@ -1,5 +1,7 @@
 package com.example.aciflow.views.post
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,9 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.R
+import com.example.aciflow.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +28,23 @@ fun PostScreen(navController: NavController, postViewModel: PostViewModel = view
     val description by postViewModel.description.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("New Post") }) },
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    Image(
+                        painter = painterResource(id = R.drawable.back),
+                        contentDescription = "Back",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(AppTheme.dimens.paddingNormal)
+                            .clickable {
+                                navController.popBackStack()
+                            }
+                    )
+                },
+                title = { Text("New Post") }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 postViewModel.publishPost()
