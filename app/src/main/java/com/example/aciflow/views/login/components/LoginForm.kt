@@ -25,7 +25,8 @@ fun LoginForm(
     loginState: LoginUIState,
     onEmailOrMobileChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onSubmit: () -> Unit
+    onSubmit: () -> Unit,
+    onRegister: () -> Unit
 ) {
 
     Column(
@@ -39,7 +40,9 @@ fun LoginForm(
                 .padding(top = AppTheme.dimens.paddingLarge),
             value = loginState.email,
             onValueChange = onEmailOrMobileChange,
-            label = "Email"
+            label = "Email",
+            isError = loginState.errorState.emailErrorState.hasError,
+            errorText = loginState.errorState.emailErrorState.errorMessage
         )
 
         // Password
@@ -50,7 +53,9 @@ fun LoginForm(
             value = loginState.password,
             onValueChange = onPasswordChange,
             label = "Password",
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
+            isError = loginState.errorState.passwordErrorState.hasError,
+            errorText = loginState.errorState.passwordErrorState.errorMessage
         )
 
         Button(
@@ -75,7 +80,7 @@ fun LoginForm(
             Text(
                 modifier = Modifier
                     .padding(start = AppTheme.dimens.paddingExtraSmall)
-                    .clickable { }, text = "Register", color = MaterialTheme.colorScheme.primary
+                    .clickable { onRegister() }, text = "Register", color = MaterialTheme.colorScheme.primary
             )
         }
     }

@@ -67,6 +67,9 @@ fun LoginScreenContent(viewModel: LoginViewModel, openAndPop: (Screen, Screen) -
                 },
                 onSubmit = {
                     viewModel.onSubmit(openAndPop)
+                },
+                onRegister = {
+                    viewModel.onRegister(openAndPop)
                 })
         }
     }

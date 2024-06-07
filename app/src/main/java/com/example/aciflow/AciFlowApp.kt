@@ -27,6 +27,7 @@ import com.example.aciflow.views.login.LoginScreen
 import com.example.aciflow.views.profile.ProfileScreen
 import com.example.aciflow.views.deadline_detail.DeadlineDetailScreen
 import com.example.aciflow.views.post.PostScreen
+import com.example.aciflow.views.register.RegisterScreen
 import com.example.aciflow.widgets.SimpleBottomAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,12 +43,12 @@ fun AciFlowApp() {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    if (currentRoute != Screen.LoginScreen.route) {
+                    if (currentRoute != Screen.LoginScreen.route && currentRoute != Screen.RegisterScreen.route) {
                         TopAppBar(title = { Text("ACI Flow") })
                     }
                 },
                 bottomBar = {
-                    if (currentRoute != Screen.LoginScreen.route) {
+                    if (currentRoute != Screen.LoginScreen.route && currentRoute != Screen.RegisterScreen.route) {
                         SimpleBottomAppBar(appState = appState)
                     }
                 },
@@ -66,6 +67,11 @@ fun AciFlowApp() {
                 ) {
                     composable(Screen.LoginScreen.route) {
                         LoginScreen { route, popUp ->
+                            appState.navigateAndPopUp(route, popUp)
+                        }
+                    }
+                    composable(Screen.RegisterScreen.route) {
+                        RegisterScreen { route, popUp ->
                             appState.navigateAndPopUp(route, popUp)
                         }
                     }
