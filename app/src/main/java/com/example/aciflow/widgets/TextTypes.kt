@@ -45,8 +45,23 @@ fun SmallTitleText(
     Text(
         modifier = modifier,
         text = text,
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.primary,
+        textAlign = textAlign
+    )
+}
+
+@Composable
+fun SmallTitleTextWhite(
+    modifier: Modifier = Modifier,
+    text: String,
+    textAlign: TextAlign = TextAlign.Start
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.secondary,
         textAlign = textAlign
     )
 }
