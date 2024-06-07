@@ -24,6 +24,9 @@ class AccountService private constructor(private val auth: FirebaseAuth) {
     val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
+    val currentUserEmail: String
+        get() = auth.currentUser?.email.orEmpty()
+
     val hasUser: Boolean
         get() = auth.currentUser != null
 

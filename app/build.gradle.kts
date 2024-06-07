@@ -58,7 +58,16 @@ dependencies {
     // firebase dependencies
     implementation(libs.firebase.auth)
 
-    implementation(libs.androidx.navigation.runtime.ktx)
+    val nav_version = "2.7.7"
+
+    // Kotlin
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
+    // Testing Navigation
+    androidTestImplementation(libs.androidx.navigation.testing)
+
+    // Jetpack Compose Integration
     implementation(libs.androidx.navigation.compose)
     //implementation(libs.firebase.auth.ktx)
     val lifecycle_version = "2.7.0"
