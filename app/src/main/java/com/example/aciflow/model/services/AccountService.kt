@@ -7,13 +7,13 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.tasks.await
 
 class AccountService private constructor(private val auth: FirebaseAuth) {
@@ -29,8 +29,9 @@ class AccountService private constructor(private val auth: FirebaseAuth) {
     }
 
     private val db = Firebase.firestore
+    private val DEFAULT_DEPARTMENT_ID = "3Cx84murEOWtynAY539u"
     val USERS_COLLECTION = "users"
-    //val DEP_COLLECTION = "departments"
+    val DEP_COLLECTION = "departments"
 
     val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
@@ -71,8 +72,9 @@ class AccountService private constructor(private val auth: FirebaseAuth) {
     //suspend fun getUserNameForReference(userRef: DocumentReference): String =
     //    userRef.get().await().getString("username").orEmpty()
 
-    suspend fun createUser(email: String, password: String){
+    suspend fun createUser(username: String, email: String, password: String){
         auth.createUserWithEmailAndPassword(email, password).await()
+        addUser(username, currentUserId)
     }
 
     suspend fun signIn(email: String, password: String){
@@ -88,8 +90,21 @@ class AccountService private constructor(private val auth: FirebaseAuth) {
             .await()
     }
 
-    suspend fun signOut() {
+    fun signOut() {
         auth.signOut()
+    }
+
+    private suspend fun addUser(username: String, userID: String){
+        //hardcoded default department
+        val depRef = db.collection(DEP_COLLECTION).document(DEFAULT_DEPARTMENT_ID)
+        //create user with default department and semester assignment
+        val user = User(
+            username = username,
+            department = depRef,
+            semester = 1
+        )
+        Log.d("DEBUG", "Adding user: $user")
+        db.collection(USERS_COLLECTION).document(userID).set(user).await()
     }
 
 }

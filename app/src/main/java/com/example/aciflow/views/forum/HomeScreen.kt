@@ -40,6 +40,7 @@ fun HomeScreen(onPost: () -> Unit) {
 @Composable
 fun HomeScreenContent(viewModel: HomeScreenViewModel, onPost: () -> Unit){
     val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Welcome to ACI Flow!") })

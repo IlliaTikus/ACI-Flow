@@ -96,7 +96,7 @@ fun AciFlowApp() {
                         EditDeadlineScreen(appState.navController)
                     }
                     composable(Screen.Group.route) {
-                        GroupScreen(appState.navController)
+                        GroupScreen()
                     }
                     composable(Screen.Post.route) {
                         PostScreen(appState.navController)

@@ -106,7 +106,7 @@ class RegisterViewModel(
         }
 
         launchCatching {
-            accountService.createUser(email, password)
+            accountService.createUser(username, email, password)
             Log.i("VM", "Signed in successfully :)")
             Log.i("VM", "Userid: ${accountService.currentUserId}")
             openAndPop(Screen.LoginScreen, Screen.RegisterScreen)

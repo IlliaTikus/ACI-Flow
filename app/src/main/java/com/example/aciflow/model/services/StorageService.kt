@@ -57,6 +57,32 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
             awaitClose { listener.remove() }
         }
 
+    fun getDepartmentMembers(
+        depRef: DocumentReference
+    ): Flow<List<String>> =
+        callbackFlow {
+            val usersRef = db.collection(USERS_COLLECTION)
+            val listener = usersRef.whereEqualTo("department", depRef)
+                .addSnapshotListener { docs, err ->
+                if ( err != null ){
+                    Log.w("DEBUG", "Listen failed: ", err)
+                    return@addSnapshotListener
+                }
+
+                val userNames = ArrayList<String>()
+                for (doc in docs!!){
+                    val user = doc.getString("username")
+                    Log.d("DEBUG", "Found user: $user")
+                    if (user != null) {
+                        userNames.add(user)
+                    }
+                }
+
+                trySend(userNames)
+            }
+            awaitClose { listener.remove() }
+        }
+
     /*
     Author should be the ID of the user writing the post, so ->
         auth.currentUserID
