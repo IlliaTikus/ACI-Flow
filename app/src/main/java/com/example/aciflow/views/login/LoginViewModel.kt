@@ -66,8 +66,8 @@ class LoginViewModel(
 
         launchCatching {
             accountService.signIn(email, password)
-            Log.i("VM", "Signed in successfully :)")
-            Log.i("VM", "Userid: ${accountService.currentUserId}")
+            Log.i("DEBUG", "Signed in successfully :)")
+            Log.i("DEBUG", "Userid: ${accountService.currentUserId}")
             openAndPop(Screen.ForumScreen, Screen.LoginScreen)
         }
     }

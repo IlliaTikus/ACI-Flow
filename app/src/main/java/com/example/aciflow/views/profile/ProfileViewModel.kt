@@ -11,13 +11,31 @@ import com.example.aciflow.views.login.LoginUIState
 import com.example.aciflow.views.login.LoginViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
+// TODO: appState hier bitte rausnehmen, stattdessen callback für clearandnavigate
+// bei onLogout übergeben
 class ProfileViewModel( private val accountService: AccountService, private val appState: AppState) : AciFlowViewModel() {
-    var uiState = mutableStateOf(ProfileUIState())
-        private set
+    private val _uiState = MutableStateFlow(ProfileUIState())
+    val uiState: StateFlow<ProfileUIState> = _uiState.asStateFlow()
+
+    init {
+        launchCatching {
+            _uiState.value = _uiState.value.copy(email = accountService.currentUserEmail)
+            accountService.currentUser.distinctUntilChanged().collect { user ->
+                // TODO: properly handle errors
+                _uiState.value = _uiState.value.copy(
+                    username = user.username,
+                    course = accountService.getDepartmentName(user.department!!),   // xD
+                    semester = user.semester
+                )
+            }
+        }
+    }
 
     fun onUsernameChanged(newValue: String) {
-        uiState.value = uiState.value.copy(username = newValue)
+        _uiState.value = _uiState.value.copy(username = newValue)
     }
 
     fun onLogout() {

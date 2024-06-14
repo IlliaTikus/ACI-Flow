@@ -81,7 +81,9 @@ fun AciFlowApp() {
                         ProfileScreen(appState.navController, appState)
                     }
                     composable(Screen.ForumScreen.route) {
-                        HomeScreen(appState.navController)
+                        HomeScreen {
+                            appState.navigate(Screen.Post)
+                        }
                     }
                     composable(Screen.Deadlines.route) {
                         DeadlinesScreen(appState.navController)

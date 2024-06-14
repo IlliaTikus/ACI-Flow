@@ -21,22 +21,34 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.aciflow.R
+import com.example.aciflow.model.services.AccountService
+import com.example.aciflow.model.services.StorageService
 import com.example.aciflow.nav.Screen
+
+@Composable
+fun HomeScreen(onPost: () -> Unit) {
+    val factory = HomeScreenViewModelFactory(
+        storageService = StorageService.getStorageService(),
+        accountService = AccountService.getAccountService()
+    )
+    val viewModel: HomeScreenViewModel = viewModel(factory = factory)
+
+    HomeScreenContent(viewModel = viewModel) { onPost() }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeScreenViewModel = viewModel()) {
-    val posts by viewModel.posts.collectAsState()
-
+fun HomeScreenContent(viewModel: HomeScreenViewModel, onPost: () -> Unit){
+    val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Welcome to ACI Flow!") })
         },
         floatingActionButton = {
-                FloatingActionButton(onClick = { navController.navigate(Screen.Post.route) }) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Post")
-                }
+            FloatingActionButton(onClick = { onPost() }) {
+                Icon(Icons.Default.Add, contentDescription = "Add Post")
             }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -50,15 +62,15 @@ fun HomeScreen(navController: NavController, viewModel: HomeScreenViewModel = vi
                 modifier = Modifier
             )
 
-            posts.forEach { post ->
+            uiState.posts.forEach { post ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = post.user, style = MaterialTheme.typography.titleSmall)
-                        Text(text = post.content, style = MaterialTheme.typography.bodySmall)
+                        Text(text = post.authorName.orEmpty(), style = MaterialTheme.typography.titleSmall)
+                        Text(text = post.content.orEmpty(), style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
