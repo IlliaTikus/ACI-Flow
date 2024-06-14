@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.aciflow.common.ext.isValidEmail
-import com.example.aciflow.common.ext.isValidPassword
-import com.example.aciflow.common.ext.passwordMatches
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.nav.Screen
 import com.example.aciflow.views.AciFlowViewModel

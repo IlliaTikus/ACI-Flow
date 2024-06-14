@@ -1,6 +1,9 @@
 package com.example.aciflow.model.services
 
 import android.util.Log
+import com.example.aciflow.model.Deadline
+import com.example.aciflow.model.DeadlinePriority
+import com.example.aciflow.model.DeadlineTag
 import com.example.aciflow.model.ForumPost
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
@@ -12,9 +15,8 @@ import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 class StorageService private constructor(private val db: FirebaseFirestore) {
 
@@ -37,7 +39,6 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         depRef: DocumentReference
     ): Flow<List<ForumPost>> =
         callbackFlow {
-            val scope = this.plus(this.coroutineContext)
             val forumRef = depRef.collection(FORUM_COLLECTION)
             val listener = forumRef.addSnapshotListener { docs, err ->
                 if ( err != null ){
@@ -84,6 +85,33 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         }
 
     /*
+    userID must be a valid user UID, e.g. -> currentUserID from accountService
+     */
+    fun getDeadlinesForUser(
+        userID: String
+    ): Flow<List<Deadline>> = callbackFlow {
+        val deadlineRef = db.collection(USERS_COLLECTION)
+            .document(userID).collection(DEADLINE_COLLECTION)
+        val listener = deadlineRef.addSnapshotListener { docs, err ->
+            if ( err != null ){
+                Log.w("DEBUG", "Listen failed: ", err)
+                return@addSnapshotListener
+            }
+
+            val deadlines = ArrayList<Deadline>()
+            for (doc in docs!!){
+                var deadline = doc.toObject<Deadline>()
+                deadline = deadline.copy(id = doc.id)
+                Log.d("DEBUG", "Read deadline: $deadline")
+                deadlines.add(deadline)
+            }
+
+            trySend(deadlines)
+        }
+        awaitClose { listener.remove() }
+    }
+
+    /*
     Author should be the ID of the user writing the post, so ->
         auth.currentUserID
      */
@@ -98,10 +126,65 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
             "content" to message,
         )
         forumRef.add(post)
-            .addOnSuccessListener { Log.d("DEBUG", "Username successfully updated!") }
-            .addOnFailureListener { e -> Log.w("DEBUG", "Error updating document", e) }
+            .addOnSuccessListener { Log.d("DEBUG", "Post written successfully!") }
+            .addOnFailureListener { e -> Log.w("DEBUG", "Error writing post document", e) }
             .await()
         Log.d("DEBUG", "Written post: $post")
+    }
+
+    /*
+    userID must be a valid user UID, e.g. -> currentUserID from accountService
+     */
+    suspend fun addDeadline(
+        userID: String,
+        title: String,
+        description: String,
+        dueDate: Date,
+        tag: DeadlineTag?,
+        priority: DeadlinePriority
+    ) {
+        val deadlineRef = db.collection(USERS_COLLECTION)
+            .document(userID).collection(DEADLINE_COLLECTION)
+        val deadline = hashMapOf(
+            "title" to title,
+            "description" to description,
+            "dueDate" to Timestamp(dueDate),
+            "tag" to tag?.tag,
+            "priority" to priority.priority
+        )
+        deadlineRef.add(deadline)
+            .addOnSuccessListener { Log.d("DEBUG", "Deadline write success: $deadline") }
+            .addOnFailureListener { e -> Log.w("DEBUG", "Error writing deadline document", e) }
+            .await()
+    }
+
+    /*
+    userID must be a valid user UID, e.g. -> currentUserID from accountService
+    deadlineID must be the id field of the deadline you wish to edit
+     */
+    suspend fun updateDeadline(
+        userID: String,
+        deadlineID: String,
+        title: String,
+        description: String,
+        dueDate: Date,
+        tag: DeadlineTag?,
+        priority: DeadlinePriority
+    ){
+        val deadlineRef = db.collection(USERS_COLLECTION)
+            .document(userID).collection(DEADLINE_COLLECTION)
+            .document(deadlineID)
+        val deadline = hashMapOf(
+            "title" to title,
+            "description" to description,
+            "dueDate" to Timestamp(dueDate),
+            "tag" to tag?.tag,
+            "priority" to priority.priority
+        )
+        deadlineRef.set(deadline)
+            .addOnSuccessListener { Log.d("DEBUG", "Deadline edit success: $deadline") }
+            .addOnFailureListener { e -> Log.w("DEBUG", "Error editing deadline document", e) }
+            .await()
     }
 
 }

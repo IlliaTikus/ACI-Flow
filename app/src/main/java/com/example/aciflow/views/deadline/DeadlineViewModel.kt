@@ -1,16 +1,12 @@
-package com.example.aciflow.views.deadlines
+package com.example.aciflow.views.deadline
 
 import androidx.lifecycle.ViewModel
+import com.example.aciflow.model.Deadline
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-data class Deadline(val title: String, val date: String, val isUrgent: Boolean)
-
+// TODO: fixen, so wie die anderen viewmodels
 class DeadlinesViewModel : ViewModel() {
-
-    private val _deadlines = MutableStateFlow(listOf(
-        Deadline("Project X", "27.05.2024", false),
-        Deadline("IoT Exam", "04.06.2024", true)
-    ))
+    private val _deadlines = MutableStateFlow(emptyList<Deadline>())
     val deadlines: StateFlow<List<Deadline>> = _deadlines
 }

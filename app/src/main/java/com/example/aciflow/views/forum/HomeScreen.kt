@@ -19,11 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.aciflow.R
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.model.services.StorageService
-import com.example.aciflow.nav.Screen
 
 @Composable
 fun HomeScreen(onPost: () -> Unit) {

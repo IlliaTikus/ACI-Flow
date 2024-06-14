@@ -8,4 +8,6 @@ data class Deadline(
     val dueDate: Timestamp? = null,
     val tag: String? = null,
     val priority: String? = null,
+
+    val id: String? = null,
 )
