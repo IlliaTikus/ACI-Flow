@@ -31,6 +31,7 @@ import com.example.aciflow.widgets.SmallTitleTextWhite
 import com.example.aciflow.widgets.TitleText
 import com.example.aciflow.widgets.UsernameField
 
+// TODO: appState hier bitte rausnehmen, mehr Info siehe ViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController, appState: AppState) {
@@ -63,12 +64,10 @@ fun ProfileScreen(navController: NavController, appState: AppState) {
 //                "Change your data"
 //            )
 
-            val uiState by remember {
-                viewModel.uiState
-            }
+            val uiState by viewModel.uiState.collectAsState()
 
             SmallTitleText(
-                text = AccountService.getAccountService().currentUserEmail,
+                text = uiState.email.orEmpty(),
             )
 
             SmallTitleTextWhite(
@@ -97,7 +96,7 @@ fun ProfileScreen(navController: NavController, appState: AppState) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = AppTheme.dimens.paddingSmall),
-                value = uiState.username,
+                value = uiState.username.orEmpty(),
                 onValueChange = { newValue -> onUsernameChanged(newValue) },
                 label = "Username"
             )

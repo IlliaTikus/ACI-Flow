@@ -23,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.aciflow.nav.Screen
+import com.example.aciflow.views.deadline.DeadlinesViewModel
 
+// TODO: anpassen, so wie home, group screen etc.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeadlinesScreen(
@@ -52,17 +54,17 @@ fun DeadlinesScreen(
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                         .clickable {
-                            navController.navigate(Screen.DeadlineDetail.createRoute(deadline.title))
+                            navController.navigate(Screen.DeadlineDetail.createRoute(deadline.title.orEmpty()))
                         },
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text(text = deadline.title, style = MaterialTheme.typography.titleSmall)
-                        Text(text = deadline.date, style = MaterialTheme.typography.bodySmall)
-                        if (deadline.isUrgent) {
+                        Text(text = deadline.title.orEmpty(), style = MaterialTheme.typography.titleSmall)
+                        Text(text = deadline.dueDate.toString(), style = MaterialTheme.typography.bodySmall)
+                        /*if (deadline.isUrgent) {
                             Text(text = "!", color = MaterialTheme.colorScheme.error)
-                        }
+                        }*/
                     }
 
                 }

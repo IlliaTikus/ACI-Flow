@@ -17,11 +17,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.model.services.AccountService
+import com.example.aciflow.model.services.StorageService
+import kotlinx.coroutines.flow.first
+
+@Composable
+fun GroupScreen() {
+    val factory = GroupViewModelFactory(
+        StorageService.getStorageService(),
+        AccountService.getAccountService()
+    )
+    val viewModel: GroupViewModel = viewModel(factory = factory)
+
+    GroupScreenContent(viewModel = viewModel)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupScreen(navController: NavController, groupViewModel: GroupViewModel = viewModel()) {
-    val members by groupViewModel.members.collectAsState()
+fun GroupScreenContent(viewModel: GroupViewModel){
+    val members by viewModel.groupMembers.collectAsState()
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Group") }) }
@@ -39,7 +53,7 @@ fun GroupScreen(navController: NavController, groupViewModel: GroupViewModel = v
                         .padding(vertical = 8.dp),
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = member.name, style = MaterialTheme.typography.titleSmall)
+                        Text(text = member, style = MaterialTheme.typography.titleSmall)
                     }
                 }
             }
