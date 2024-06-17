@@ -1,6 +1,6 @@
-package com.example.aciflow.views.forum
+package com.example.aciflow.views.deadlines
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,69 +19,58 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.aciflow.R
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.model.services.StorageService
 
 @Composable
-fun HomeScreen(onPost: () -> Unit) {
-    val factory = HomeScreenViewModelFactory(
-        storageService = StorageService.getStorageService(),
-        accountService = AccountService.getAccountService()
+fun DeadlinesScreen(onDeadline: () -> Unit) {
+    val factory = DeadlinesViewModelFactory(
+        StorageService.getStorageService(),
+        AccountService.getAccountService(),
     )
-    val viewModel: HomeScreenViewModel = viewModel(factory = factory)
-
-    HomeScreenContent(viewModel = viewModel) { onPost() }
+    val viewModel: DeadlinesViewModel = viewModel(factory = factory)
+    DeadlinesScreenContent(viewModel = viewModel) { onDeadline() }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenContent(viewModel: HomeScreenViewModel, onPost: () -> Unit) {
-    val uiState by viewModel.uiState.collectAsState()
-
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Welcome to ACI Flow!") })
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { onPost() }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Post")
-            }
+fun DeadlinesScreenContent(viewModel: DeadlinesViewModel, onDeadline: () -> Unit) {
+    val deadlines by viewModel.deadlines.collectAsState()
+    Scaffold(topBar = { TopAppBar(title = { Text("Deadlines") }) }, floatingActionButton = {
+        FloatingActionButton(onClick = { onDeadline() }) {
+            Icon(Icons.Default.Add, contentDescription = "Add Deadline")
         }
-    ) { innerPadding ->
+    }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.banner2),
-                contentDescription = "ACI Flow Logo",
-                modifier = Modifier
-            )
-
-            uiState.posts.forEach { post ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+            deadlines.forEach { deadline ->
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .clickable { onDeadline() }     // todo: navigate to deadline detail screen with deadline id
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
                         Text(
-                            text = post.authorName.orEmpty(),
+                            text = deadline.title.orEmpty(),
                             style = MaterialTheme.typography.titleSmall
                         )
                         Text(
-                            text = post.content.orEmpty(),
+                            text = deadline.dueDate.toString(),
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
+
                 }
             }
         }
     }
+
 }

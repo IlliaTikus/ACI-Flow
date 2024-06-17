@@ -2,7 +2,12 @@ package com.example.aciflow
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -17,13 +22,13 @@ import androidx.navigation.navArgument
 import com.example.aciflow.nav.Screen
 import com.example.aciflow.theme.ACIFlowTheme
 import com.example.aciflow.views.deadline.edit.EditDeadlineScreen
+import com.example.aciflow.views.deadline_detail.DeadlineDetailScreen
 import com.example.aciflow.views.deadlines.DeadlinesScreen
 import com.example.aciflow.views.forum.HomeScreen
 import com.example.aciflow.views.group.GroupScreen
 import com.example.aciflow.views.login.LoginScreen
-import com.example.aciflow.views.profile.ProfileScreen
-import com.example.aciflow.views.deadline_detail.DeadlineDetailScreen
 import com.example.aciflow.views.post.PostScreen
+import com.example.aciflow.views.profile.ProfileScreen
 import com.example.aciflow.views.register.RegisterScreen
 import com.example.aciflow.widgets.SimpleBottomAppBar
 
@@ -86,7 +91,7 @@ fun AciFlowApp() {
                         }
                     }
                     composable(Screen.Deadlines.route) {
-                        DeadlinesScreen(appState.navController)
+                        DeadlinesScreen { appState.navigate(Screen.EditDeadline) }
                     }
                     composable(Screen.DeadlineDetail.route, arguments = listOf(navArgument("deadlineTitle") { type = NavType.StringType })) { backStackEntry ->
                         val deadlineTitle = backStackEntry.arguments?.getString("deadlineTitle") ?: ""
