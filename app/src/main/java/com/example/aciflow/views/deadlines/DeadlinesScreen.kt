@@ -22,18 +22,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.model.services.AccountService
+import com.example.aciflow.model.services.StorageService
 import com.example.aciflow.nav.Screen
-import com.example.aciflow.views.deadline.DeadlinesViewModel
 
 // TODO: anpassen, so wie home, group screen etc.
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeadlinesScreen(
-    navController: NavController,
-    deadlinesViewModel: DeadlinesViewModel = viewModel()
+    navController: NavController
 ) {
-    val deadlines by deadlinesViewModel.deadlines.collectAsState()
+    val factory = DeadlinesViewModelFactory(
+        StorageService.getStorageService(),
+        AccountService.getAccountService(),
+    )
+    val viewModel: DeadlinesViewModel = viewModel(factory = factory)
+    DeadlinesScreenContent(viewModel = viewModel, navController = navController)
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeadlinesScreenContent(viewModel: DeadlinesViewModel, navController: NavController) {
+    val deadlines by viewModel.deadlines.collectAsState()
     Scaffold(
         topBar = { TopAppBar(title = { Text("Deadlines") }) },
         floatingActionButton = {
@@ -60,8 +69,14 @@ fun DeadlinesScreen(
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text(text = deadline.title.orEmpty(), style = MaterialTheme.typography.titleSmall)
-                        Text(text = deadline.dueDate.toString(), style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            text = deadline.title.orEmpty(),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Text(
+                            text = deadline.dueDate.toString(),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                         /*if (deadline.isUrgent) {
                             Text(text = "!", color = MaterialTheme.colorScheme.error)
                         }*/
@@ -71,4 +86,5 @@ fun DeadlinesScreen(
             }
         }
     }
+
 }

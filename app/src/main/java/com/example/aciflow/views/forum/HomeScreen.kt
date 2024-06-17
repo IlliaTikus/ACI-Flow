@@ -1,7 +1,10 @@
 package com.example.aciflow.views.forum
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -36,7 +39,7 @@ fun HomeScreen(onPost: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenContent(viewModel: HomeScreenViewModel, onPost: () -> Unit){
+fun HomeScreenContent(viewModel: HomeScreenViewModel, onPost: () -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
@@ -68,8 +71,14 @@ fun HomeScreenContent(viewModel: HomeScreenViewModel, onPost: () -> Unit){
                         .padding(vertical = 8.dp),
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = post.authorName.orEmpty(), style = MaterialTheme.typography.titleSmall)
-                        Text(text = post.content.orEmpty(), style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            text = post.authorName.orEmpty(),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Text(
+                            text = post.content.orEmpty(),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
             }
