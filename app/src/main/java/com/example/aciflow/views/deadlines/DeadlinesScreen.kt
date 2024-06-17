@@ -21,36 +21,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.model.services.StorageService
-import com.example.aciflow.nav.Screen
 
-// TODO: anpassen, so wie home, group screen etc.
 @Composable
-fun DeadlinesScreen(
-    navController: NavController
-) {
+fun DeadlinesScreen(onDeadline: () -> Unit) {
     val factory = DeadlinesViewModelFactory(
         StorageService.getStorageService(),
         AccountService.getAccountService(),
     )
     val viewModel: DeadlinesViewModel = viewModel(factory = factory)
-    DeadlinesScreenContent(viewModel = viewModel, navController = navController)
+    DeadlinesScreenContent(viewModel = viewModel) { onDeadline() }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeadlinesScreenContent(viewModel: DeadlinesViewModel, navController: NavController) {
+fun DeadlinesScreenContent(viewModel: DeadlinesViewModel, onDeadline: () -> Unit) {
     val deadlines by viewModel.deadlines.collectAsState()
-    Scaffold(
-        topBar = { TopAppBar(title = { Text("Deadlines") }) },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Screen.EditDeadline.route) }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Deadline")
-            }
+    Scaffold(topBar = { TopAppBar(title = { Text("Deadlines") }) }, floatingActionButton = {
+        FloatingActionButton(onClick = { onDeadline() }) {
+            Icon(Icons.Default.Add, contentDescription = "Add Deadline")
         }
-    ) { innerPadding ->
+    }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -58,13 +50,10 @@ fun DeadlinesScreenContent(viewModel: DeadlinesViewModel, navController: NavCont
                 .padding(16.dp)
         ) {
             deadlines.forEach { deadline ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .clickable {
-                            navController.navigate(Screen.DeadlineDetail.createRoute(deadline.title.orEmpty()))
-                        },
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .clickable { onDeadline() }     // todo: navigate to deadline detail screen with deadline id
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp)
@@ -77,9 +66,6 @@ fun DeadlinesScreenContent(viewModel: DeadlinesViewModel, navController: NavCont
                             text = deadline.dueDate.toString(),
                             style = MaterialTheme.typography.bodySmall
                         )
-                        /*if (deadline.isUrgent) {
-                            Text(text = "!", color = MaterialTheme.colorScheme.error)
-                        }*/
                     }
 
                 }
