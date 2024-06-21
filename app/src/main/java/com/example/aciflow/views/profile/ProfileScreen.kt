@@ -43,6 +43,10 @@ fun ProfileScreen(navController: NavController, appState: AppState) {
         viewModel.onUsernameChanged(inputString)
     }
 
+    fun updateUsername() {
+        viewModel.updateUsername()
+    }
+
     fun onLogout () {
         viewModel.onLogout()
     }
@@ -122,7 +126,7 @@ fun ProfileScreen(navController: NavController, appState: AppState) {
                     .height(AppTheme.dimens.normalButtonHeight)
                     .requiredWidth(AppTheme.dimens.normalButtonWidth)
                     .align(Alignment.CenterHorizontally),
-                onClick = { },
+                onClick = {updateUsername()},
             ) {
                 Text(text = "Change", style = MaterialTheme.typography.titleMedium)
             }

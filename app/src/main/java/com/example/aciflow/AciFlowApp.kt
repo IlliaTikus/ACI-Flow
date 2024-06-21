@@ -44,28 +44,11 @@ fun AciFlowApp() {
 
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
-                topBar = {
-                    if (currentRoute != Screen.LoginScreen.route && currentRoute != Screen.RegisterScreen.route) {
-                        TopAppBar(title = { Text("ACI Flow") })
-                    }
-                },
                 bottomBar = {
                     if (currentRoute != Screen.LoginScreen.route && currentRoute != Screen.RegisterScreen.route) {
                         SimpleBottomAppBar(appState = appState)
                     }
-                },
-//                floatingActionButton = {
-//                    if (currentRoute == Screen.Deadlines.route) {
-//                        FloatingActionButton(onClick = { appState.navController.navigate(Screen.EditDeadline.route) }) {
-//                            Icon(Icons.Default.Add, contentDescription = "Add Deadline")
-//                        }
-//                    }
-//                    if (currentRoute == Screen.ForumScreen.route) {
-//                        FloatingActionButton(onClick = { appState.navController.navigate(Screen.Post.route) }) {
-//                            Icon(Icons.Default.Add, contentDescription = "Add Post")
-//                        }
-//                    }
-//                }
+                }
             ) { innerPadding ->
                 NavHost(
                     navController = appState.navController,
@@ -104,7 +87,7 @@ fun AciFlowApp() {
                         GroupScreen()
                     }
                     composable(Screen.Post.route) {
-                        PostScreen(appState.navController)
+                        PostScreen(appState.navController, appState)
                     }
                 }
             }
