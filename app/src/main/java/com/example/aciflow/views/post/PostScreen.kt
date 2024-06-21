@@ -19,13 +19,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.AppState
 import com.example.aciflow.R
+import com.example.aciflow.model.services.AccountService
+import com.example.aciflow.model.services.StorageService
 import com.example.aciflow.theme.AppTheme
+import com.example.aciflow.views.profile.ProfileViewModel
+import com.example.aciflow.views.profile.ProfileViewModelFactory
+import com.google.firebase.firestore.DocumentReference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen(navController: NavController, postViewModel: PostViewModel = viewModel()) {
-    val description by postViewModel.description.collectAsState()
+fun PostScreen(navController: NavController, appState: AppState) {
+    val factory = PostViewModelFactory(accountService = AccountService.getAccountService(), storageService  = StorageService.getStorageService(), appState = appState)
+    val viewModel: PostViewModel = viewModel(factory = factory)
+
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -47,7 +56,7 @@ fun PostScreen(navController: NavController, postViewModel: PostViewModel = view
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                postViewModel.publishPost()
+                viewModel.publishPost()
                 navController.popBackStack()
             }) {
                 Icon(Icons.Default.Send, contentDescription = "Publish Post")
@@ -61,8 +70,10 @@ fun PostScreen(navController: NavController, postViewModel: PostViewModel = view
                 .padding(16.dp)
         ) {
             OutlinedTextField(
-                value = description,
-                onValueChange = { postViewModel.updateDescription(it) },
+                value = uiState.description,
+                onValueChange = { newValue ->
+                    viewModel.updateDescription(newValue)
+                },
                 label = { Text("Description") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )

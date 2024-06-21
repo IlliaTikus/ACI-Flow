@@ -58,6 +58,7 @@ dependencies {
     // firebase dependencies
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
 
     val nav_version = "2.7.7"
 

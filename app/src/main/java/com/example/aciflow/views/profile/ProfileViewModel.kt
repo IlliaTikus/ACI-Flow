@@ -3,6 +3,7 @@ package com.example.aciflow.views.profile
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.aciflow.AppState
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.nav.Screen
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 // TODO: appState hier bitte rausnehmen, stattdessen callback für clearandnavigate
 // bei onLogout übergeben
@@ -36,6 +38,16 @@ class ProfileViewModel( private val accountService: AccountService, private val 
 
     fun onUsernameChanged(newValue: String) {
         _uiState.value = _uiState.value.copy(username = newValue)
+    }
+
+    fun updateUsername() {
+        viewModelScope.launch {
+            _uiState.value.username?.let { onChange(it) }
+        }
+    }
+
+    private suspend fun onChange(username: String) {
+        accountService.updateUserName(username)
     }
 
     fun onLogout() {
