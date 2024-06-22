@@ -112,6 +112,21 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         awaitClose { listener.remove() }
     }
 
+    suspend fun getDeadlineById(userID: String, deadlineId: String): Deadline? {
+        val deadlineRef = db.collection(USERS_COLLECTION)
+            .document(userID)
+            .collection(DEADLINE_COLLECTION)
+            .document(deadlineId)
+
+        return try {
+            val snapshot = deadlineRef.get().await()
+            snapshot.toObject<Deadline>()?.copy(id = snapshot.id)
+        } catch (e: Exception) {
+            Log.e("DEBUG", "Error fetching deadline with ID $deadlineId for user $userID", e)
+            null
+        }
+    }
+
     /*
     Author should be the ID of the user writing the post, so ->
         auth.currentUserID
@@ -142,7 +157,7 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         description: String,
         dueDate: Date,
         tag: DeadlineTag?,
-        priority: DeadlinePriority
+        priority: DeadlinePriority?
     ) {
         val deadlineRef = db.collection(USERS_COLLECTION)
             .document(userID).collection(DEADLINE_COLLECTION)
@@ -151,7 +166,7 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
             "description" to description,
             "dueDate" to Timestamp(dueDate),
             "tag" to tag?.tag,
-            "priority" to priority.priority
+            "priority" to priority?.priority
         )
         deadlineRef.add(deadline)
             .addOnSuccessListener { Log.d("DEBUG", "Deadline write success: $deadline") }
