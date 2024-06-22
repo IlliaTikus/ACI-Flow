@@ -10,6 +10,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.channels.awaitClose
@@ -39,15 +40,15 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         depRef: DocumentReference
     ): Flow<List<ForumPost>> =
         callbackFlow {
-            val forumRef = depRef.collection(FORUM_COLLECTION)
+            val forumRef = depRef.collection(FORUM_COLLECTION).orderBy("createdAt", Query.Direction.DESCENDING)
             val listener = forumRef.addSnapshotListener { docs, err ->
-                if ( err != null ){
+                if (err != null) {
                     Log.w("DEBUG", "Listen failed: ", err)
                     return@addSnapshotListener
                 }
 
                 val posts = ArrayList<ForumPost>()
-                for (doc in docs!!){
+                for (doc in docs!!) {
                     val post = doc.toObject<ForumPost>()
                     Log.d("DEBUG", "Read post: $post")
                     posts.add(post)
