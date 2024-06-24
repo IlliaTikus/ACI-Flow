@@ -74,14 +74,17 @@ fun AciFlowApp() {
                         }
                     }
                     composable(Screen.Deadlines.route) {
-                        DeadlinesScreen { appState.navigate(Screen.EditDeadline) }
+                        DeadlinesScreen (appState.navController) { appState.navigate(Screen.EditDeadline) }
                     }
-                    composable(Screen.DeadlineDetail.route, arguments = listOf(navArgument("deadlineTitle") { type = NavType.StringType })) { backStackEntry ->
-                        val deadlineTitle = backStackEntry.arguments?.getString("deadlineTitle") ?: ""
-                        DeadlineDetailScreen(deadlineTitle, appState.navController)
+                    composable(
+                        route = "${Screen.DeadlineDetail}/{deadlineId}",
+                        arguments = listOf(navArgument("deadlineId") { type = NavType.StringType })
+                    ) { backStackEntry ->
+                        val deadlineId = backStackEntry.arguments?.getString("deadlineId") ?: ""
+                        DeadlineDetailScreen(appState.navController, appState, deadlineId)
                     }
                     composable(Screen.EditDeadline.route) {
-                        EditDeadlineScreen(appState.navController)
+                        EditDeadlineScreen(appState.navController, appState)
                     }
                     composable(Screen.Group.route) {
                         GroupScreen()

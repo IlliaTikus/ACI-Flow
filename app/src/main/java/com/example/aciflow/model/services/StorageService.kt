@@ -10,6 +10,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.channels.awaitClose
@@ -39,15 +40,15 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         depRef: DocumentReference
     ): Flow<List<ForumPost>> =
         callbackFlow {
-            val forumRef = depRef.collection(FORUM_COLLECTION)
+            val forumRef = depRef.collection(FORUM_COLLECTION).orderBy("createdAt", Query.Direction.DESCENDING)
             val listener = forumRef.addSnapshotListener { docs, err ->
-                if ( err != null ){
+                if (err != null) {
                     Log.w("DEBUG", "Listen failed: ", err)
                     return@addSnapshotListener
                 }
 
                 val posts = ArrayList<ForumPost>()
-                for (doc in docs!!){
+                for (doc in docs!!) {
                     val post = doc.toObject<ForumPost>()
                     Log.d("DEBUG", "Read post: $post")
                     posts.add(post)
@@ -91,7 +92,7 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         userID: String
     ): Flow<List<Deadline>> = callbackFlow {
         val deadlineRef = db.collection(USERS_COLLECTION)
-            .document(userID).collection(DEADLINE_COLLECTION)
+            .document(userID).collection(DEADLINE_COLLECTION).orderBy("dueDate", Query.Direction.ASCENDING)
         val listener = deadlineRef.addSnapshotListener { docs, err ->
             if ( err != null ){
                 Log.w("DEBUG", "Listen failed: ", err)
@@ -109,6 +110,21 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
             trySend(deadlines)
         }
         awaitClose { listener.remove() }
+    }
+
+    suspend fun getDeadlineById(userID: String, deadlineId: String): Deadline? {
+        val deadlineRef = db.collection(USERS_COLLECTION)
+            .document(userID)
+            .collection(DEADLINE_COLLECTION)
+            .document(deadlineId)
+
+        return try {
+            val snapshot = deadlineRef.get().await()
+            snapshot.toObject<Deadline>()?.copy(id = snapshot.id)
+        } catch (e: Exception) {
+            Log.e("DEBUG", "Error fetching deadline with ID $deadlineId for user $userID", e)
+            null
+        }
     }
 
     /*
@@ -141,7 +157,7 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         description: String,
         dueDate: Date,
         tag: DeadlineTag?,
-        priority: DeadlinePriority
+        priority: DeadlinePriority?
     ) {
         val deadlineRef = db.collection(USERS_COLLECTION)
             .document(userID).collection(DEADLINE_COLLECTION)
@@ -150,7 +166,7 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
             "description" to description,
             "dueDate" to Timestamp(dueDate),
             "tag" to tag?.tag,
-            "priority" to priority.priority
+            "priority" to priority?.priority
         )
         deadlineRef.add(deadline)
             .addOnSuccessListener { Log.d("DEBUG", "Deadline write success: $deadline") }

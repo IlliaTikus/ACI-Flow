@@ -14,26 +14,56 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.AppState
+import com.example.aciflow.model.services.AccountService
+import com.example.aciflow.model.services.StorageService
 import com.example.aciflow.views.deadline.detail.DeadlineDetailViewModel
+import com.example.aciflow.views.deadline.detail.DeadlineDetailViewModelFactory
+import com.example.aciflow.views.post.PostViewModel
+import com.example.aciflow.views.post.PostViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeadlineDetailScreen(deadlineTitle: String, navController: NavController, deadlineDetailViewModel: DeadlineDetailViewModel = viewModel()) {
-    val deadline by deadlineDetailViewModel.getDeadline(deadlineTitle).collectAsState()
+fun DeadlineDetailScreen(
+    navController: NavController,
+    appState: AppState,
+    deadlineId: String
+) {
+    val factory = DeadlineDetailViewModelFactory(
+        accountService = AccountService.getAccountService(),
+        storageService = StorageService.getStorageService()
+    )
+    val viewModel: DeadlineDetailViewModel = viewModel(factory = factory)
+    viewModel.getDeadlineById(deadlineId)
+
+    val deadline by viewModel.deadline.collectAsState()
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Deadline Details") }) }
     ) { innerPadding ->
-        deadline?.let {
+        deadline?.let { deadline ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
                     .padding(16.dp)
             ) {
-                Text(text = it.title, style = MaterialTheme.typography.titleSmall)
-                Text(text = "Date: ${it.date}", style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Description: ${it.description}", style = MaterialTheme.typography.bodySmall)
+                Text(text = deadline.title ?: "", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Date: ${deadline.dueDate ?: ""}", style = MaterialTheme.typography.bodySmall)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Description: ${deadline.description ?: ""}", style = MaterialTheme.typography.bodySmall)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                deadline.tag?.let { tag ->
+                    Text(text = "Tag: $tag", style = MaterialTheme.typography.titleSmall)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                deadline.priority?.let { priority ->
+                    Text(text = "Priority: $priority", style = MaterialTheme.typography.titleSmall)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
         }
     }
