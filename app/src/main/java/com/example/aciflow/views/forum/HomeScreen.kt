@@ -2,7 +2,6 @@ package com.example.aciflow.views.forum
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,9 +32,7 @@ import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.model.services.StorageService
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
-import com.google.firebase.Timestamp
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.aciflow.common.ext.toFormattedString
 
 @Composable
 fun HomeScreen(onPost: () -> Unit) {
@@ -115,9 +112,4 @@ fun HomeScreenContent(viewModel: HomeScreenViewModel, onPost: () -> Unit) {
             }
         }
     }
-}
-
-fun Timestamp.toFormattedString(): String {
-    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-    return sdf.format(this.toDate())
 }

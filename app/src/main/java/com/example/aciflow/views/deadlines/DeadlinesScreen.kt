@@ -22,14 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.aciflow.common.ext.toFormattedString
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.model.services.StorageService
 import com.example.aciflow.nav.Screen
-import com.example.aciflow.views.forum.toFormattedString
-import com.google.firebase.Timestamp
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun DeadlinesScreen(navController: NavController, onDeadline: () -> Unit) {
@@ -83,7 +79,4 @@ fun DeadlinesScreenContent(viewModel: DeadlinesViewModel, navController: NavCont
     }
 }
 
-fun Date.toFormattedString(): String {
-    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-    return sdf.format(this)
-}
+

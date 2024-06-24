@@ -92,7 +92,7 @@ class StorageService private constructor(private val db: FirebaseFirestore) {
         userID: String
     ): Flow<List<Deadline>> = callbackFlow {
         val deadlineRef = db.collection(USERS_COLLECTION)
-            .document(userID).collection(DEADLINE_COLLECTION)
+            .document(userID).collection(DEADLINE_COLLECTION).orderBy("dueDate", Query.Direction.ASCENDING)
         val listener = deadlineRef.addSnapshotListener { docs, err ->
             if ( err != null ){
                 Log.w("DEBUG", "Listen failed: ", err)
