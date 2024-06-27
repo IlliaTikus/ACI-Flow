@@ -7,6 +7,7 @@ data class Deadline(
     val title: String? = null,
     val description: String? = null,
     val dueDate: Date? = null,
+    val reminder : Timestamp? = null,
     val tag: String? = null,
     val priority: String? = null,
 
