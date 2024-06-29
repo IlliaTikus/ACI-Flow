@@ -54,7 +54,9 @@ fun AciFlowApp() {
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     composable(Screen.LoginScreen.route) {
-                        LoginScreen { route, popUp ->
+                        LoginScreen (navigate = {
+                            route -> appState.navigate(route)
+                        }) { route, popUp ->
                             appState.navigateAndPopUp(route, popUp)
                         }
                     }

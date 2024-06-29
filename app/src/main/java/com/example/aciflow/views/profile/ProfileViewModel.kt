@@ -46,6 +46,10 @@ class ProfileViewModel( private val accountService: AccountService, private val 
         }
     }
 
+    fun resetPassword(){
+        accountService.resetPassword()
+    }
+
     private suspend fun onChange(username: String) {
         accountService.updateUserName(username)
     }

@@ -90,6 +90,10 @@ class AccountService private constructor(private val auth: FirebaseAuth) {
             .await()
     }
 
+    fun resetPassword(){
+        auth.sendPasswordResetEmail(currentUserEmail)
+    }
+
     fun signOut() {
         auth.signOut()
     }
