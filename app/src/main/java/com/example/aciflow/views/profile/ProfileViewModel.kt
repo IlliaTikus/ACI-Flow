@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.aciflow.AppState
+import com.example.aciflow.common.snackbar.SnackbarManager
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.nav.Screen
 import com.example.aciflow.views.AciFlowViewModel
@@ -46,8 +47,14 @@ class ProfileViewModel( private val accountService: AccountService, private val 
         }
     }
 
+    fun resetPassword(){
+        accountService.resetPassword()
+        SnackbarManager.showMessage("Email sent!")
+    }
+
     private suspend fun onChange(username: String) {
         accountService.updateUserName(username)
+        SnackbarManager.showMessage("Username changed!")
     }
 
     fun onLogout() {

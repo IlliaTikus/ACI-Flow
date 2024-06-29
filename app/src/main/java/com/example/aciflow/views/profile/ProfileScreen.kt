@@ -116,7 +116,8 @@ fun ProfileScreen(navController: NavController, appState: AppState) {
                 Text(
                     modifier = Modifier
                         .padding(start = AppTheme.dimens.paddingExtraSmall)
-                        .clickable { }, text = "Reset password", color = MaterialTheme.colorScheme.primary
+                        .clickable { viewModel.resetPassword() },
+                    text = "Reset password", color = MaterialTheme.colorScheme.primary
                 )
             }
 
