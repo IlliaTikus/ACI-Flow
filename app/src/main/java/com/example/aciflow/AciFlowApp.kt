@@ -1,5 +1,7 @@
 package com.example.aciflow
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ScaffoldState
@@ -69,7 +71,9 @@ fun AciFlowApp() {
                 NavHost(
                     navController = appState.navController,
                     startDestination = Screen.LoginScreen.route,
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }
                 ) {
                     composable(Screen.LoginScreen.route) {
                         LoginScreen (navigate = {
