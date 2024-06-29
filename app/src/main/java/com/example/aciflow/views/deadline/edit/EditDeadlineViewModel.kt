@@ -37,6 +37,10 @@ class EditDeadlineViewModel(
         _uiState.value = _uiState.value.copy(dueDate = newDueDate)
     }
 
+    fun updateReminder(newReminder: Timestamp) {
+        _uiState.value = _uiState.value.copy(reminder = newReminder)
+    }
+
     fun updateDescription(newDescription: String) {
         _uiState.value = _uiState.value.copy(description = newDescription)
     }

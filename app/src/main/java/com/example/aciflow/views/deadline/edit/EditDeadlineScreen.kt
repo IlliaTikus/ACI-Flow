@@ -1,6 +1,7 @@
 package com.example.aciflow.views.deadline.edit
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.view.Menu
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -37,6 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.aciflow.AppState
@@ -46,6 +49,14 @@ import com.example.aciflow.model.DeadlineTag
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.model.services.StorageService
 import com.example.aciflow.theme.AppTheme
+import com.example.aciflow.views.AciFlowViewModel
+import com.google.firebase.Timestamp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,12 +82,10 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
-
     uiState.dueDate?.let {
         calendar.time = it
     }
 
-    val today = Calendar.getInstance()
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
@@ -88,10 +97,24 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
         calendar.get(Calendar.DAY_OF_MONTH)
     )
 
-    today.add(Calendar.DAY_OF_YEAR, 1) // Start from tomorrow
+    val today = Calendar.getInstance()
+    today.add(Calendar.DAY_OF_YEAR, 1)
     datePickerDialog.datePicker.minDate = today.timeInMillis
 
     val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+    val timePickerDialog = TimePickerDialog(
+        context,
+        { _, hourOfDay, minute ->
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            calendar.set(Calendar.MINUTE, minute)
+            viewModel.updateReminder(Timestamp(calendar.time))
+        },
+        calendar.get(Calendar.HOUR_OF_DAY),
+        calendar.get(Calendar.MINUTE),
+        true
+    )
 
     Scaffold(
         topBar = {
@@ -108,7 +131,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
                             }
                     )
                 },
-                title = { Text("Edit Deadline") }
+                title = { Text("Add Deadline") }
             )
         },
         floatingActionButton = {
@@ -149,6 +172,20 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
             ) {
                 Text(
                     text = uiState.dueDate?.let { dateFormatter.format(it) } ?: "",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .clickable {
+                        timePickerDialog.show() // Show the time picker when the box is clicked
+                    }
+                    .border(1.dp, color = Color.Gray, MaterialTheme.shapes.small)
+            ) {
+                Text(
+                    text = uiState.reminder?.toDate()?.let { timeFormat.format(it) } ?: "",
                     modifier = Modifier.padding(16.dp)
                 )
             }
