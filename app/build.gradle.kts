@@ -76,6 +76,7 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended:1.4.3")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
 
+    implementation(libs.androidx.material)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

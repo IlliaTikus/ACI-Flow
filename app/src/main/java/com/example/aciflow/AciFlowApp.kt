@@ -2,14 +2,20 @@ package com.example.aciflow
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.aciflow.common.snackbar.SnackbarManager
 import com.example.aciflow.nav.Screen
 import com.example.aciflow.theme.ACIFlowTheme
 import com.example.aciflow.views.deadline.edit.EditDeadlineScreen
@@ -29,6 +36,7 @@ import com.example.aciflow.views.post.PostScreen
 import com.example.aciflow.views.profile.ProfileScreen
 import com.example.aciflow.views.register.RegisterScreen
 import com.example.aciflow.widgets.SimpleBottomAppBar
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +49,16 @@ fun AciFlowApp() {
             val currentRoute = navBackStackEntry?.destination?.route
 
             Scaffold(
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = it,
+                        modifier = Modifier.padding(8.dp),
+                        snackbar = { snackbarData ->
+                            Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.primary)
+                        }
+                    )
+                },
+                scaffoldState = appState.scaffoldState,
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {
                     if (currentRoute != Screen.LoginScreen.route && currentRoute != Screen.RegisterScreen.route) {
@@ -100,7 +118,10 @@ fun AciFlowApp() {
 
 @Composable
 fun rememberAppState(
-    navController: NavHostController = rememberNavController()
-) = remember(navController) {
-    AppState(navController)
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    navController: NavHostController = rememberNavController(),
+    snackbarManager: SnackbarManager = SnackbarManager,
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
+) = remember(scaffoldState, navController, snackbarManager, coroutineScope) {
+    AppState(scaffoldState, navController, snackbarManager, coroutineScope)
 }
