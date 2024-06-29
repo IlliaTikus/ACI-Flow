@@ -54,6 +54,7 @@ class ProfileViewModel( private val accountService: AccountService, private val 
 
     private suspend fun onChange(username: String) {
         accountService.updateUserName(username)
+        SnackbarManager.showMessage("Username changed!")
     }
 
     fun onLogout() {

@@ -41,7 +41,6 @@ fun RegisterScreen(openAndPop: (Screen, Screen) -> Unit) {
     RegisterScreenContent(viewModel = viewModel, openAndPop = openAndPop)
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreenContent(viewModel: RegisterViewModel, openAndPop: (Screen, Screen) -> Unit) {
