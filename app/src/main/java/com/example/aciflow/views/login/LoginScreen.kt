@@ -21,15 +21,15 @@ import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.nav.Screen
 
 @Composable
-fun LoginScreen(openAndPop: (Screen, Screen) -> Unit) {
+fun LoginScreen(navigate: (Screen) -> Unit, openAndPop: (Screen, Screen) -> Unit) {
     val factory = LoginViewModelFactory(accountService = AccountService.getAccountService())
     val viewModel: LoginViewModel = viewModel(factory = factory)
     viewModel.checkUserSignedIn(openAndPop)
-    LoginScreenContent(viewModel = viewModel, openAndPop=openAndPop)
+    LoginScreenContent(viewModel = viewModel, navigate=navigate, openAndPop=openAndPop)
 }
 
 @Composable
-fun LoginScreenContent(viewModel: LoginViewModel, openAndPop: (Screen, Screen) -> Unit) {
+fun LoginScreenContent(viewModel: LoginViewModel, navigate: (Screen) -> Unit, openAndPop: (Screen, Screen) -> Unit) {
     Scaffold(modifier = Modifier
         .fillMaxSize()
         .height(100.dp),
@@ -69,7 +69,7 @@ fun LoginScreenContent(viewModel: LoginViewModel, openAndPop: (Screen, Screen) -
                     viewModel.onSubmit(openAndPop)
                 },
                 onRegister = {
-                    viewModel.onRegister(openAndPop)
+                    viewModel.onRegister(navigate)
                 })
         }
     }

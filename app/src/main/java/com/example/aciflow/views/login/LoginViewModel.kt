@@ -70,8 +70,8 @@ class LoginViewModel(
         }
     }
 
-    fun onRegister(openAndPop: (Screen, Screen) -> Unit) {
-        openAndPop(Screen.RegisterScreen, Screen.LoginScreen)
+    fun onRegister(navigate: (Screen) -> Unit) {
+        navigate(Screen.RegisterScreen)
     }
 
 }
