@@ -71,7 +71,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
-    uiState.dueDate?.let {
+    uiState.date?.let {
         calendar.time = it
     }
 
@@ -79,7 +79,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
         context,
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
-            viewModel.updateDueDate(context, calendar.time)
+            viewModel.updateDate(calendar.time)
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
@@ -98,7 +98,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            viewModel.updateReminder(Timestamp(calendar.time))
+            viewModel.updateTime(Timestamp(calendar.time))
         },
         calendar.get(Calendar.HOUR_OF_DAY),
         calendar.get(Calendar.MINUTE),
@@ -160,7 +160,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
                     .border(1.dp, color = Color.Gray, MaterialTheme.shapes.small)
             ) {
                 Text(
-                    text = uiState.dueDate?.let { dateFormatter.format(it) } ?: "",
+                    text = uiState.date?.let { dateFormatter.format(it) } ?: "",
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -174,7 +174,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
                     .border(1.dp, color = Color.Gray, MaterialTheme.shapes.small)
             ) {
                 Text(
-                    text = uiState.reminder?.toDate()?.let { timeFormat.format(it) } ?: "",
+                    text = uiState.time?.toDate()?.let { timeFormat.format(it) } ?: "",
                     modifier = Modifier.padding(16.dp)
                 )
             }

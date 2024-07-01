@@ -10,8 +10,8 @@ data class EditDeadlineUIState(
     val title: String = "",
     val description: String = "",
 //    val dueDate: Date = Date(),
-    val dueDate: Date = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.time,
-    val reminder : Timestamp? = Timestamp.now(),
+    val date: Date = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.time,
+    val time : Timestamp = Timestamp.now(),
     val tag: DeadlineTag? = null,
-    val priority: DeadlinePriority? = null,
+    val priority: DeadlinePriority? = DeadlinePriority.Important,
 )

@@ -1,9 +1,11 @@
 package com.example.aciflow.views.deadline.edit
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.aciflow.AppState
+import com.example.aciflow.common.ext.toFormattedString
 import com.example.aciflow.model.DeadlinePriority
 import com.example.aciflow.model.DeadlineTag
 import com.example.aciflow.model.services.AccountService
@@ -17,7 +19,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 import java.util.Date
+import java.util.Locale
 
 class EditDeadlineViewModel(
     private val accountService: AccountService,
@@ -32,15 +40,12 @@ class EditDeadlineViewModel(
         _uiState.value = _uiState.value.copy(title = newTitle)
     }
 
-    fun updateDueDate(context: Context, newDueDate: Date) {
-        val deadlineMillis = newDueDate.time
-        val reminderReceiver = DeadlineReminderReceiver()
-        reminderReceiver.scheduleReminder(context, deadlineMillis)
-        _uiState.value = _uiState.value.copy(dueDate = newDueDate)
+    fun updateDate(newDueDate: Date) {
+        _uiState.value = _uiState.value.copy(date = newDueDate)
     }
 
-    fun updateReminder(newReminder: Timestamp) {
-        _uiState.value = _uiState.value.copy(reminder = newReminder)
+    fun updateTime(newReminder: Timestamp) {
+        _uiState.value = _uiState.value.copy(time = newReminder)
     }
 
     fun updateDescription(newDescription: String) {
@@ -55,16 +60,36 @@ class EditDeadlineViewModel(
         _uiState.value = _uiState.value.copy(priority = newPriority)
     }
 
+    /*
+    XD
+     */
+    private fun getMergedDateAndTime(date: Date, timestamp: Timestamp): Date {
+        val startingDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            .format(date.time)
+        val startingTime = timestamp.toFormattedString().split(" ")[1]
+        val dateTime = LocalDateTime.of(LocalDate.parse(startingDate), LocalTime.parse(startingTime))
+
+        val ldt = LocalDateTime.ofInstant(
+            dateTime.toInstant(ZoneId.systemDefault().rules.getOffset(dateTime)),
+            ZoneId.systemDefault());
+        val deadlineDateTime: Date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+
+        return deadlineDateTime
+    }
+
     fun saveDeadline(context: Context) {
-        val deadlineMillis = _uiState.value.dueDate.time
+        val deadlineDateTime: Date = getMergedDateAndTime(_uiState.value.date, _uiState.value.time)
+
+        val deadlineMillis = deadlineDateTime.time
         val reminderReceiver = DeadlineReminderReceiver()
         reminderReceiver.scheduleReminder(context, deadlineMillis)
+
         CoroutineScope(Dispatchers.IO).launch {
             storageService.addDeadline(
                 accountService.currentUserId,
                 _uiState.value.title,
                 _uiState.value.description,
-                _uiState.value.dueDate,
+                deadlineDateTime,
                 _uiState.value.tag,
                 _uiState.value.priority
             )

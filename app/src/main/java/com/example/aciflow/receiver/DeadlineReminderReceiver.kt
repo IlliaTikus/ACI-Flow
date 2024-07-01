@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.aciflow.R
 import java.util.concurrent.TimeUnit
@@ -19,14 +20,12 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
             context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "reminder_channel"
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Deadline Reminder",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            channelId,
+            "Deadline Reminder",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        notificationManager.createNotificationChannel(channel)
 
         val builder = context.let {
             NotificationCompat.Builder(it, channelId)
@@ -44,6 +43,7 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         checkAndRequestExactAlarmPermission(context)
 
         val reminderTime = deadlineMillis - TimeUnit.DAYS.toMillis(1)
+        Log.d("DEBUG", "DEADLINE RECEIVER: $reminderTime")
 
         val intent = Intent(context, DeadlineReminderReceiver::class.java)
         val pendingIntent =
