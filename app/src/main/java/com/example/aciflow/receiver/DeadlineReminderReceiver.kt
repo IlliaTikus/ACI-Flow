@@ -98,6 +98,7 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         Log.d("DEBUG", "DEADLINE RECEIVER: $twentyFourHourPriorToDeadlineAlarmTime")
 
         val intent = Intent(context, DeadlineReminderReceiver::class.java)
+        intent.putExtra("deadlineTitle", title)
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
