@@ -7,8 +7,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.aciflow.MainActivity
 import com.example.aciflow.R
@@ -59,10 +57,11 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
     }
 
     fun scheduleReminders(context: Context, deadlineMillis: Long, title: String) {
-        checkAndRequestExactAlarmPermission(context)
-
-        setTwentyFourHoursPriorToDeadlineNotification(deadlineMillis, context, title)
-        setEndOfDeadlineNotification(deadlineMillis, context, title)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (alarmManager.canScheduleExactAlarms()) {
+            setTwentyFourHoursPriorToDeadlineNotification(deadlineMillis, context, title)
+            setEndOfDeadlineNotification(deadlineMillis, context, title)
+        }
     }
 
     private fun setEndOfDeadlineNotification(
@@ -95,14 +94,13 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         title: String
     ) {
         val twentyFourHourPriorToDeadlineAlarmTime = deadlineMillis - TimeUnit.DAYS.toMillis(1)
-        Log.d("DEBUG", "DEADLINE RECEIVER: $twentyFourHourPriorToDeadlineAlarmTime")
 
         val intent = Intent(context, DeadlineReminderReceiver::class.java)
         intent.putExtra("deadlineTitle", title)
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
-                0,
+                1,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
@@ -113,13 +111,5 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
             twentyFourHourPriorToDeadlineAlarmTime,
             pendingIntent
         )
-    }
-
-    private fun checkAndRequestExactAlarmPermission(context: Context) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if (!alarmManager.canScheduleExactAlarms()) {
-            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-            context.startActivity(intent)
-        }
     }
 }
