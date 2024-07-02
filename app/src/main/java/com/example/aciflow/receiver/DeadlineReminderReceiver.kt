@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -39,11 +38,37 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         notificationManager.notify(1, builder.build())
     }
 
-    fun scheduleReminder(context: Context, deadlineMillis: Long) {
+    fun scheduleReminders(context: Context, deadlineMillis: Long) {
         checkAndRequestExactAlarmPermission(context)
 
-        val reminderTime = deadlineMillis - TimeUnit.DAYS.toMillis(1)
-        Log.d("DEBUG", "DEADLINE RECEIVER: $reminderTime")
+        setTwentyFourHoursPriorToDeadlineNotification(deadlineMillis, context)
+        setEndOfDeadlineNotification(deadlineMillis, context)
+    }
+
+    private fun setEndOfDeadlineNotification(deadlineMillis: Long, context: Context) {
+        val intent = Intent(context, DeadlineReminderReceiver::class.java)
+        val pendingIntent =
+            PendingIntent.getBroadcast(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExact(
+            AlarmManager.RTC_WAKEUP,
+            deadlineMillis,
+            pendingIntent
+        )
+    }
+
+    private fun setTwentyFourHoursPriorToDeadlineNotification(
+        deadlineMillis: Long,
+        context: Context
+    ) {
+        val twentyFourHourPriorToDeadlineAlarmTime = deadlineMillis - TimeUnit.DAYS.toMillis(1)
+        Log.d("DEBUG", "DEADLINE RECEIVER: $twentyFourHourPriorToDeadlineAlarmTime")
 
         val intent = Intent(context, DeadlineReminderReceiver::class.java)
         val pendingIntent =
@@ -55,7 +80,11 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
             )
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
+        alarmManager.setExact(
+            AlarmManager.RTC_WAKEUP,
+            twentyFourHourPriorToDeadlineAlarmTime,
+            pendingIntent
+        )
     }
 
     private fun checkAndRequestExactAlarmPermission(context: Context) {

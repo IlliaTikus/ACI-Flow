@@ -1,7 +1,6 @@
 package com.example.aciflow.views.deadline.edit
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.aciflow.AppState
@@ -82,7 +81,7 @@ class EditDeadlineViewModel(
 
         val deadlineMillis = deadlineDateTime.time
         val reminderReceiver = DeadlineReminderReceiver()
-        reminderReceiver.scheduleReminder(context, deadlineMillis)
+        reminderReceiver.scheduleReminders(context, deadlineMillis)
 
         CoroutineScope(Dispatchers.IO).launch {
             storageService.addDeadline(
