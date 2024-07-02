@@ -81,7 +81,7 @@ class EditDeadlineViewModel(
 
         val deadlineMillis = deadlineDateTime.time
         val reminderReceiver = DeadlineReminderReceiver()
-        reminderReceiver.scheduleReminders(context, deadlineMillis)
+        reminderReceiver.scheduleReminders(context, deadlineMillis, _uiState.value.title)
 
         CoroutineScope(Dispatchers.IO).launch {
             storageService.addDeadline(

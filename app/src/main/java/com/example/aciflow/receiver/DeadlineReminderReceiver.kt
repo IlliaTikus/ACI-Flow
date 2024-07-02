@@ -26,11 +26,20 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         )
         notificationManager.createNotificationChannel(channel)
 
+        val deadlineTitle = intent?.getStringExtra("deadlineTitle")
+        val isToday = intent?.getBooleanExtra("isToday", false)
+
+        val notificationText = if (isToday == true) {
+            "Ihre Deadline $deadlineTitle ist heute!"
+        } else {
+            "Ihre Deadline $deadlineTitle ist in einem Tag!"
+        }
+
         val builder = context.let {
             NotificationCompat.Builder(it, channelId)
                 .setSmallIcon(R.drawable.logo_app)
-                .setContentTitle("Erinnerung")
-                .setContentText("Ihre Deadline ist morgen!")
+                .setContentTitle(deadlineTitle)
+                .setContentText(notificationText)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
         }
@@ -38,15 +47,17 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         notificationManager.notify(1, builder.build())
     }
 
-    fun scheduleReminders(context: Context, deadlineMillis: Long) {
+    fun scheduleReminders(context: Context, deadlineMillis: Long, title: String) {
         checkAndRequestExactAlarmPermission(context)
 
-        setTwentyFourHoursPriorToDeadlineNotification(deadlineMillis, context)
-        setEndOfDeadlineNotification(deadlineMillis, context)
+        setTwentyFourHoursPriorToDeadlineNotification(deadlineMillis, context, title)
+        setEndOfDeadlineNotification(deadlineMillis, context, title)
     }
 
-    private fun setEndOfDeadlineNotification(deadlineMillis: Long, context: Context) {
+    private fun setEndOfDeadlineNotification(deadlineMillis: Long, context: Context, title: String) {
         val intent = Intent(context, DeadlineReminderReceiver::class.java)
+        intent.putExtra("deadlineTitle", title)
+        intent.putExtra("isToday", true)
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
@@ -65,7 +76,8 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
 
     private fun setTwentyFourHoursPriorToDeadlineNotification(
         deadlineMillis: Long,
-        context: Context
+        context: Context,
+        title: String
     ) {
         val twentyFourHourPriorToDeadlineAlarmTime = deadlineMillis - TimeUnit.DAYS.toMillis(1)
         Log.d("DEBUG", "DEADLINE RECEIVER: $twentyFourHourPriorToDeadlineAlarmTime")
