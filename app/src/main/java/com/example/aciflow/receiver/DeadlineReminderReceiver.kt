@@ -10,6 +10,7 @@ import android.content.Intent
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.example.aciflow.MainActivity
 import com.example.aciflow.R
 import java.util.concurrent.TimeUnit
 
@@ -35,6 +36,15 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
             "Ihre Deadline $deadlineTitle ist in einem Tag!"
         }
 
+        val launchAppIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, launchAppIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
         val builder = context.let {
             NotificationCompat.Builder(it, channelId)
                 .setSmallIcon(R.drawable.logo_app)
@@ -42,6 +52,7 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
                 .setContentText(notificationText)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
         }
 
         notificationManager.notify(1, builder.build())
@@ -54,7 +65,11 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         setEndOfDeadlineNotification(deadlineMillis, context, title)
     }
 
-    private fun setEndOfDeadlineNotification(deadlineMillis: Long, context: Context, title: String) {
+    private fun setEndOfDeadlineNotification(
+        deadlineMillis: Long,
+        context: Context,
+        title: String
+    ) {
         val intent = Intent(context, DeadlineReminderReceiver::class.java)
         intent.putExtra("deadlineTitle", title)
         intent.putExtra("isToday", true)
