@@ -2,7 +2,6 @@ package com.example.aciflow.views.deadline.edit
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.view.Menu
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -38,8 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.aciflow.AppState
@@ -48,15 +45,7 @@ import com.example.aciflow.model.DeadlinePriority
 import com.example.aciflow.model.DeadlineTag
 import com.example.aciflow.model.services.AccountService
 import com.example.aciflow.model.services.StorageService
-import com.example.aciflow.theme.AppTheme
-import com.example.aciflow.views.AciFlowViewModel
 import com.google.firebase.Timestamp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -82,7 +71,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
-    uiState.dueDate?.let {
+    uiState.date?.let {
         calendar.time = it
     }
 
@@ -90,7 +79,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
         context,
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
-            viewModel.updateDueDate(calendar.time)
+            viewModel.updateDate(calendar.time)
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
@@ -109,7 +98,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            viewModel.updateReminder(Timestamp(calendar.time))
+            viewModel.updateTime(Timestamp(calendar.time))
         },
         calendar.get(Calendar.HOUR_OF_DAY),
         calendar.get(Calendar.MINUTE),
@@ -136,7 +125,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.saveDeadline()
+                viewModel.saveDeadline(context)
                 navController.popBackStack()
             }) {
                 Icon(Icons.Default.Check, contentDescription = "Save Deadline")
@@ -171,7 +160,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
                     .border(1.dp, color = Color.Gray, MaterialTheme.shapes.small)
             ) {
                 Text(
-                    text = uiState.dueDate?.let { dateFormatter.format(it) } ?: "",
+                    text = uiState.date?.let { dateFormatter.format(it) } ?: "",
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -185,7 +174,7 @@ fun EditDeadlineScreen(navController: NavController, appState: AppState) {
                     .border(1.dp, color = Color.Gray, MaterialTheme.shapes.small)
             ) {
                 Text(
-                    text = uiState.reminder?.toDate()?.let { timeFormat.format(it) } ?: "",
+                    text = uiState.time?.toDate()?.let { timeFormat.format(it) } ?: "",
                     modifier = Modifier.padding(16.dp)
                 )
             }

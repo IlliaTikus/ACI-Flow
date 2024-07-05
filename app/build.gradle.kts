@@ -77,6 +77,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
 
     implementation(libs.androidx.material)
+    implementation(libs.google.accompanist.permissions)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
