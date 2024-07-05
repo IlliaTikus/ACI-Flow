@@ -17,15 +17,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.aciflow.common.snackbar.SnackbarManager
 
 class MainActivity : ComponentActivity() {
 
     private val requestPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions[Manifest.permission.POST_NOTIFICATIONS] == true) {
-            sendTestNotification()
-        }
+    ) { _ ->
+        checkAndRequestExactAlarmPermission()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,39 +35,31 @@ class MainActivity : ComponentActivity() {
         }
 
         requestNecessaryPermissions()
-
-        createNotificationChannel()
     }
 
     private fun requestNecessaryPermissions() {
-        if (!checkAndRequestExactAlarmPermission()) {
-            return
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(
                     this,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                requestPermissionsLauncher.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                requestPermissionsLauncher.launch(arrayOf(
+                    Manifest.permission.POST_NOTIFICATIONS
+                ))
             } else {
-                sendTestNotification()
+                checkAndRequestExactAlarmPermission()
             }
-        } else {
-            sendTestNotification()
         }
     }
 
     private fun checkAndRequestExactAlarmPermission(): Boolean {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        return if (!alarmManager.canScheduleExactAlarms()) {
+        if (!alarmManager.canScheduleExactAlarms()) {
             val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
             startActivity(intent)
-            false
-        } else {
-            true
         }
+        return alarmManager.canScheduleExactAlarms()    // doesn't work properly
     }
 
     private fun createNotificationChannel() {

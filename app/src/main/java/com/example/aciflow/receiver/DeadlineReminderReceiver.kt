@@ -7,9 +7,12 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.example.aciflow.MainActivity
 import com.example.aciflow.R
+import com.example.aciflow.common.snackbar.SnackbarManager
 import java.util.concurrent.TimeUnit
 
 class DeadlineReminderReceiver : BroadcastReceiver() {
@@ -61,6 +64,8 @@ class DeadlineReminderReceiver : BroadcastReceiver() {
         if (alarmManager.canScheduleExactAlarms()) {
             setTwentyFourHoursPriorToDeadlineNotification(deadlineMillis, context, title)
             setEndOfDeadlineNotification(deadlineMillis, context, title)
+        }else{
+            SnackbarManager.showMessage("Please allow alarms and reminders for deadline reminders to work!")
         }
     }
 
